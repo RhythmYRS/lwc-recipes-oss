@@ -1,0 +1,781 @@
+<template>
+    <div class="main-container">
+        <!-- Tab Navigation -->
+        <div class="tab-container">
+            <div class="tab active">Responses</div>
+            <div class="tab" onclick={handleTabSwitch}>Reports</div>
+        </div>
+
+        <div class="assessment-container">
+            <template if:true={viewResponse}>
+                <div class="card">
+                    <!-- Timeline Panel -->
+                    <div class={timelinePanelClass}>
+                        <div class="panel-header timeline-header">
+                            <button
+                                class="icon-button"
+                                onclick={handleLeftButtonClick}
+                                title="Toggle Timeline Panel"
+                            >
+                                <span class="icon icon-chevron-right"></span>
+                            </button>
+                            <span><b>{labels.timeLine}</b></span>
+                        </div>
+                        <div class="timeline-container">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-scroll">
+                                <template
+                                    for:each={assessmentTimeline}
+                                    for:item="assessment"
+                                >
+                                    <div
+                                        key={assessment.status}
+                                        class={assessment.classlist}
+                                    >
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-date">
+                                            {assessment.date}
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h2 class="timeline-title">
+                                                {assessment.status}
+                                            </h2>
+                                            <span class="timeline-name"
+                                                >- {assessment.name}</span
+                                            >
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="main-panel">
+                        <div class="panel-header">
+                            <div class="header-left">
+                                <button
+                                    class="icon-button toggle-timeline"
+                                    onclick={handleLeftButtonClick}
+                                    title="Toggle Timeline Panel"
+                                >
+                                    <span class="icon icon-chevron-left"></span>
+                                </button>
+                                <p>
+                                    <b
+                                        >{labels.details} :
+                                        {assessmentData.assessmentName}
+                                        {assessmentData.endDate}</b
+                                    >
+                                </p>
+                            </div>
+
+                            <!-- Control buttons -->
+                            <div class="header-controls">
+                                <!-- Expand/Collapse button -->
+                                <template if:true={showExpand}>
+                                    <button
+                                        class="icon-button"
+                                        onclick={handleAccordian}
+                                        title="Expand All"
+                                        data-id="[ + ]"
+                                    >
+                                        <span
+                                            class="icon icon-plus-square"
+                                        ></span>
+                                    </button>
+                                </template>
+                                <template if:false={showExpand}>
+                                    <button
+                                        class="icon-button"
+                                        onclick={handleAccordian}
+                                        title="Collapse All"
+                                        data-id="[ - ]"
+                                    >
+                                        <span
+                                            class="icon icon-minus-square"
+                                        ></span>
+                                    </button>
+                                </template>
+
+                                <!-- Filter dropdown -->
+                                <template if:true={showstatus}>
+                                    <div
+                                        class="dropdown-wrapper filter-wrapper"
+                                    >
+                                        <button
+                                            class="icon-button filter-button"
+                                            onclick={toggleFilterMenu}
+                                            title="Filtering"
+                                        >
+                                            <svg
+                                                class="filter-icon"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                        <div class={filterDropdownClass}>
+                                            <ul class="filter-menu">
+                                                <li
+                                                    class={isAllSelected}
+                                                    onclick={handleChange}
+                                                    data-id="All"
+                                                >
+                                                    {labels.SP_All}
+                                                </li>
+                                                <li
+                                                    class={isLowerFlagSelected}
+                                                    onclick={handleChange}
+                                                    data-id="showlowerflag"
+                                                >
+                                                    {labels.SP_Flagged}
+                                                </li>
+                                                <li
+                                                    class={isApprovedSelected}
+                                                    onclick={handleApproveChange}
+                                                    data-id="showapproved"
+                                                >
+                                                    {labels.SP_Approved}
+                                                </li>
+                                                <li
+                                                    class={isRejectedSelected}
+                                                    onclick={handleRejectChange}
+                                                    data-id="showrejected"
+                                                >
+                                                    {labels.SP_Rejected}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Edit button 
+                <template if:true={showEditIconCustomer}>
+                  <template if:true={showEditIcon}>
+                    <button class="icon-button" onclick={handleEdit} title="Edit" data-id="EditTrue" disabled={mockData.isIconDisabled}>
+                      <span class="icon icon-pencil"></span>
+                    </button>
+                  </template>
+                  <template if:false={showEditIcon}>
+                    <button class="icon-button" onclick={handleEdit} title="Edit" data-id="EditFalse" disabled={mockData.isIconDisabled}>
+                      <span class="icon icon-edit"></span>
+                    </button>
+                  </template>
+                </template>
+              -->
+
+                                <!-- Export dropdown -->
+                                <template if:true={showdownloadIcon}>
+                                    <div class="dropdown-wrapper">
+                                        <button
+                                            class="icon-button"
+                                            onclick={toggleExportMenu}
+                                            title="Export"
+                                        >
+                                            <span
+                                                class="icon icon-download"
+                                            ></span>
+                                        </button>
+                                        <ul class={exportMenuClass}>
+                                            <li
+                                                onclick={handleExportPDF}
+                                                title="PDF"
+                                            >
+                                                PDF
+                                            </li>
+                                            <li
+                                                onclick={handleExportCSV}
+                                                title="CSV"
+                                            >
+                                                CSV
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </template>
+
+                                <!-- Right Panel toggle button -->
+                                <button
+                                    lwc:if={isRightPanelOpen}
+                                    class="icon-button"
+                                    onclick={handleRightButtonClick}
+                                    title="Toggle Right Panel"
+                                >
+                                    <span
+                                        class="icon icon-chevron-right"
+                                    ></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Assessment Areas -->
+                        <div class="assessment-areas">
+                            <template
+                                for:each={assessmentAreas}
+                                for:item="area"
+                            >
+                                <div key={area.id} class="assessment-area">
+                                    <div
+                                        class="area-header"
+                                        onclick={toggleAreaDetails}
+                                        data-id={area.id}
+                                    >
+                                        <div class="area-icon">
+                                            <template if:true={area.expanded}>
+                                                <span
+                                                    class="icon icon-angle-down"
+                                                ></span>
+                                            </template>
+                                            <template if:false={area.expanded}>
+                                                <span
+                                                    class="icon icon-angle-right"
+                                                ></span>
+                                            </template>
+                                        </div>
+                                        <div
+                                            class="area-title"
+                                            onclick={handleAreaTitleClick}
+                                        >
+                                            {area.title}
+                                        </div>
+                                        <div class="area-metrics">
+                                            <div class="area-metric">
+                                                <span class="metric-label"
+                                                    >Total Count</span
+                                                >
+                                                <span class="metric-value"
+                                                    >{area.metrics.totalCount}</span
+                                                >
+                                            </div>
+                                            <div class="area-metric">
+                                                <span class="metric-label"
+                                                    >%Completed</span
+                                                >
+                                                <span class="metric-value"
+                                                    >{area.metrics.completed}</span
+                                                >
+                                            </div>
+                                            <div class="area-metric">
+                                                <span class="metric-label"
+                                                    >Score</span
+                                                >
+                                                <span class="metric-value"
+                                                    >{area.metrics.score}</span
+                                                >
+                                            </div>
+                                            <div class="area-metric">
+                                                <span class="metric-label"
+                                                    >Follow-Ups</span
+                                                >
+                                                <span class="metric-value"
+                                                    >{area.metrics.followUps}</span
+                                                >
+                                            </div>
+                                            <div class="area-metric">
+                                                <span class="metric-label"
+                                                    >Findings</span
+                                                >
+                                                <span class="metric-value"
+                                                    >{area.metrics.findings}</span
+                                                >
+                                            </div>
+                                            <div class="area-metric">
+                                                <span class="metric-label"
+                                                    >Tasks</span
+                                                >
+                                                <span class="metric-value"
+                                                    >{area.metrics.tasks}</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Area details section that appears when expanded -->
+                                    <template if:true={area.expanded}>
+                                        <div class="area-details">
+                                            <div class="area-content">
+                                                <p>
+                                                    This is the detailed content
+                                                    for {area.title}.
+                                                </p>
+
+                                                <!-- Action buttons for each area -->
+                                                <div class="area-actions">
+                                                    <button
+                                                        class="action-button icon-action"
+                                                        onclick={showComments}
+                                                        data-area-id={area.id}
+                                                        title="Comments"
+                                                    >
+                                                        <span
+                                                            class="action-icon"
+                                                            >&#128172;</span
+                                                        >
+                                                        <!-- Speech bubble icon -->
+                                                        <span
+                                                            class="action-label"
+                                                            >Comments</span
+                                                        >
+                                                    </button>
+                                                    <button
+                                                        class="action-button icon-action"
+                                                        onclick={showFindings}
+                                                        data-area-id={area.id}
+                                                        title="Findings"
+                                                    >
+                                                        <span
+                                                            class="action-icon"
+                                                            >&#128269;</span
+                                                        >
+                                                        <!-- Magnifying glass icon -->
+                                                        <span
+                                                            class="action-label"
+                                                            >Findings</span
+                                                        >
+                                                    </button>
+                                                    <button
+                                                        class="action-button icon-action"
+                                                        onclick={showFiles}
+                                                        data-area-id={area.id}
+                                                        title="Files"
+                                                    >
+                                                        <span
+                                                            class="action-icon"
+                                                            >&#128193;</span
+                                                        >
+                                                        <!-- Folder icon -->
+                                                        <span
+                                                            class="action-label"
+                                                            >Files</span
+                                                        >
+                                                    </button>
+                                                    <button
+                                                        class="action-button icon-action"
+                                                        onclick={showEmails}
+                                                        data-area-id={area.id}
+                                                        title="Emails"
+                                                    >
+                                                        <span
+                                                            class="action-icon"
+                                                            >&#9993;</span
+                                                        >
+                                                        <!-- Envelope icon -->
+                                                        <span
+                                                            class="action-label"
+                                                            >Emails</span
+                                                        >
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button
+                                class="action-button save-button"
+                                onclick={handleSaveAction}
+                            >
+                                <span class="action-icon save-icon"
+                                    >&#128190;</span
+                                >
+                                <!-- Save icon -->
+                                <span>Save</span>
+                            </button>
+                            <button
+                                class="action-button review-button"
+                                onclick={handleCloseReviewAction}
+                            >
+                                <span class="action-icon review-icon"
+                                    >&#10004;</span
+                                >
+                                <!-- Check mark icon -->
+                                <span>Close Review</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel for Details -->
+                    <template if:true={isRightPanelOpen}>
+                        <div class="right-panel">
+                            <div class="panel-header">
+                                <p><b>{displayHeader}</b></p>
+                                <button
+                                    class="icon-button"
+                                    onclick={handleRightButtonClick}
+                                    title="Close Panel"
+                                >
+                                    <span class="icon icon-chevron-left"></span>
+                                </button>
+                            </div>
+                            <div class="panel-content">
+                                <template if:true={openReviewComments}>
+                                    <div class="comments-section">
+                                        <h3>Comments</h3>
+                                        <div class="comment">
+                                            <div class="comment-header">
+                                                <span class="comment-author"
+                                                    >User User</span
+                                                >
+                                                <span class="comment-date"
+                                                    >May-29-2025</span
+                                                >
+                                            </div>
+                                            <div class="comment-body">
+                                                <p>
+                                                    This assessment needs
+                                                    additional details on
+                                                    technical debt requirements.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="comment">
+                                            <div class="comment-header">
+                                                <span class="comment-author"
+                                                    >System Admin</span
+                                                >
+                                                <span class="comment-date"
+                                                    >May-28-2025</span
+                                                >
+                                            </div>
+                                            <div class="comment-body">
+                                                <p>
+                                                    Assessment started. Please
+                                                    review all sections.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="comment-input">
+                                            <textarea
+                                                placeholder="Add a comment..."
+                                            ></textarea>
+                                            <button class="send-button">
+                                                Send
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <template if:true={showCapaForm}>
+                                    <div class="findings-section">
+                                        <h3>Findings</h3>
+                                        <div class="finding">
+                                            <h4>
+                                                Finding #1: Technical Debt
+                                                Assessment
+                                            </h4>
+                                            <p>
+                                                Current technical debt includes
+                                                legacy systems that need
+                                                modernization.
+                                            </p>
+                                            <div class="finding-meta">
+                                                <span>Priority: High</span>
+                                                <span>Status: Open</span>
+                                            </div>
+                                        </div>
+                                        <div class="finding">
+                                            <h4>
+                                                Finding #2: System Integration
+                                            </h4>
+                                            <p>
+                                                Integration between systems
+                                                requires optimization.
+                                            </p>
+                                            <div class="finding-meta">
+                                                <span>Priority: Medium</span>
+                                                <span>Status: In Progress</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <template if:true={openRightFile}>
+                                    <div class="files-section">
+                                        <h3>Files</h3>
+                                        <div class="file-list">
+                                            <div class="file-item">
+                                                <span
+                                                    class="icon icon-file-pdf"
+                                                ></span>
+                                                <span
+                                                    >TechDebtAnalysis.pdf</span
+                                                >
+                                            </div>
+                                            <div class="file-item">
+                                                <span
+                                                    class="icon icon-file-excel"
+                                                ></span>
+                                                <span
+                                                    >SystemInventory.xlsx</span
+                                                >
+                                            </div>
+                                            <div class="file-item">
+                                                <span
+                                                    class="icon icon-file-word"
+                                                ></span>
+                                                <span
+                                                    >ModernizationPlan.docx</span
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="file-upload">
+                                            <button class="upload-button">
+                                                Upload New File
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <template if:true={openEmail}>
+                                    <div class="emails-section">
+                                        <h3>Emails</h3>
+                                        <div class="email-list">
+                                            <div class="email-item">
+                                                <div class="email-header">
+                                                    <span class="email-subject"
+                                                        >Tech Debt Assessment
+                                                        Started</span
+                                                    >
+                                                    <span class="email-date"
+                                                        >May-28-2025</span
+                                                    >
+                                                </div>
+                                                <div class="email-meta">
+                                                    <span class="email-from"
+                                                        >From:
+                                                        system@example.com</span
+                                                    >
+                                                    <span class="email-to"
+                                                        >To:
+                                                        user@example.com</span
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div class="email-item">
+                                                <div class="email-header">
+                                                    <span class="email-subject"
+                                                        >Assessment Follow-up
+                                                        Required</span
+                                                    >
+                                                    <span class="email-date"
+                                                        >May-29-2025</span
+                                                    >
+                                                </div>
+                                                <div class="email-meta">
+                                                    <span class="email-from"
+                                                        >From:
+                                                        admin@example.com</span
+                                                    >
+                                                    <span class="email-to"
+                                                        >To:
+                                                        user@example.com</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="email-compose">
+                                            <button class="compose-button">
+                                                Compose New Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template if:false={viewResponse}>
+                <center>{labels.SP_Rep_Acc}</center>
+            </template>
+
+            <!-- Modal for mobile view -->
+            <template if:true={showModal}>
+                <div class="modal-backdrop">
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <h2>{displayHeader}</h2>
+                            <button class="icon-button" onclick={closeModal}>
+                                <span class="icon icon-times"></span>
+                            </button>
+                        </div>
+                        <div class="modal-content">
+                            <!-- Same content as right panel, repeated for modal -->
+                            <template if:true={openReviewComments}>
+                                <div class="comments-section">
+                                    <h3>Comments</h3>
+                                    <div class="comment">
+                                        <div class="comment-header">
+                                            <span class="comment-author"
+                                                >User User</span
+                                            >
+                                            <span class="comment-date"
+                                                >May-29-2025</span
+                                            >
+                                        </div>
+                                        <div class="comment-body">
+                                            <p>
+                                                This assessment needs additional
+                                                details on technical debt
+                                                requirements.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="comment">
+                                        <div class="comment-header">
+                                            <span class="comment-author"
+                                                >System Admin</span
+                                            >
+                                            <span class="comment-date"
+                                                >May-28-2025</span
+                                            >
+                                        </div>
+                                        <div class="comment-body">
+                                            <p>
+                                                Assessment started. Please
+                                                review all sections.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="comment-input">
+                                        <textarea
+                                            placeholder="Add a comment..."
+                                        ></textarea>
+                                        <button class="send-button">
+                                            Send
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={showCapaForm}>
+                                <div class="findings-section">
+                                    <h3>Findings</h3>
+                                    <div class="finding">
+                                        <h4>
+                                            Finding #1: Technical Debt
+                                            Assessment
+                                        </h4>
+                                        <p>
+                                            Current technical debt includes
+                                            legacy systems that need
+                                            modernization.
+                                        </p>
+                                        <div class="finding-meta">
+                                            <span>Priority: High</span>
+                                            <span>Status: Open</span>
+                                        </div>
+                                    </div>
+                                    <div class="finding">
+                                        <h4>Finding #2: System Integration</h4>
+                                        <p>
+                                            Integration between systems requires
+                                            optimization.
+                                        </p>
+                                        <div class="finding-meta">
+                                            <span>Priority: Medium</span>
+                                            <span>Status: In Progress</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={openRightFile}>
+                                <div class="files-section">
+                                    <h3>Files</h3>
+                                    <div class="file-list">
+                                        <div class="file-item">
+                                            <span
+                                                class="icon icon-file-pdf"
+                                            ></span>
+                                            <span>TechDebtAnalysis.pdf</span>
+                                        </div>
+                                        <div class="file-item">
+                                            <span
+                                                class="icon icon-file-excel"
+                                            ></span>
+                                            <span>SystemInventory.xlsx</span>
+                                        </div>
+                                        <div class="file-item">
+                                            <span
+                                                class="icon icon-file-word"
+                                            ></span>
+                                            <span>ModernizationPlan.docx</span>
+                                        </div>
+                                    </div>
+                                    <div class="file-upload">
+                                        <button class="upload-button">
+                                            Upload New File
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={openEmail}>
+                                <div class="emails-section">
+                                    <h3>Emails</h3>
+                                    <div class="email-list">
+                                        <div class="email-item">
+                                            <div class="email-header">
+                                                <span class="email-subject"
+                                                    >Tech Debt Assessment
+                                                    Started</span
+                                                >
+                                                <span class="email-date"
+                                                    >May-28-2025</span
+                                                >
+                                            </div>
+                                            <div class="email-meta">
+                                                <span class="email-from"
+                                                    >From:
+                                                    system@example.com</span
+                                                >
+                                                <span class="email-to"
+                                                    >To: user@example.com</span
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="email-item">
+                                            <div class="email-header">
+                                                <span class="email-subject"
+                                                    >Assessment Follow-up
+                                                    Required</span
+                                                >
+                                                <span class="email-date"
+                                                    >May-29-2025</span
+                                                >
+                                            </div>
+                                            <div class="email-meta">
+                                                <span class="email-from"
+                                                    >From:
+                                                    admin@example.com</span
+                                                >
+                                                <span class="email-to"
+                                                    >To: user@example.com</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="email-compose">
+                                        <button class="compose-button">
+                                            Compose New Email
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
