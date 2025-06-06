@@ -836,7 +836,7 @@
 /* Timeline Styles - Compact Implementation */
 .timeline-container {
     position: relative;
-    padding: 8px 20px; /* Further reduced vertical padding to move content up */
+    padding: 8px 18px 20px; /* Further reduced vertical padding to move content up */
     background-color: transparent;
     width: 100%;
     max-width: 100%; /* Use full panel width */
@@ -888,11 +888,22 @@
     box-sizing: border-box;
     overflow: visible;
     min-height: 42px; /* Further reduced height for compactness */
+    padding: 13px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* z-index: 1; */
+    animation: fadeInUp 0.6s ease-out;
 }
 
-/* Add subtle fade-in animation for timeline items */
-.cad-timeline_slidebase {
-    animation: fadeInUp 0.6s ease-out;
+.cad-timeline_slidebase:nth-child(odd) {
+    align-self: flex-start;
+    margin-left: 0;
+}
+
+.cad-timeline_slidebase:nth-child(even) {
+    align-self: flex-end;
+    margin-right: 0;
 }
 
 /* First timeline item positioning */
@@ -949,8 +960,11 @@
     align-items: center; /* Center the dot vertically */
     z-index: 2;
     flex-shrink: 0;
-    min-height: 34px; /* Further reduced to move content up */
+    min-height: 64px; /* Further reduced to move content up */
     margin-left: 40px; /* Reduced margin for tighter gap */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .timeline-dot {
@@ -1016,7 +1030,7 @@
     position: relative;
     flex: 1;
     transition: all 0.2s ease-in-out;
-    z-index: 1;
+    z-index: 2;
     min-height: 30px; /* Further reduced height */
     max-width: calc(100% - 80px); /* Reduced for tighter spacing */
     margin-left: -35px; /* Reduced margin for tighter gap */
@@ -1071,6 +1085,22 @@
 /* Ensure old timeline line styles don't interfere */
 .cad-timeline_line {
     display: none !important;
+}
+
+@media (max-width: 768px) {
+    .cad-timeline_slidebase {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .timeline-scroll::before {
+        left: 20px; /* Adjust line position for mobile */
+    }
+
+    .timeline-dot-container {
+        left: 20px; /* Align dots with the line on mobile */
+        transform: none;
+    }
 }
 
 /* Responsive adjustments */
@@ -1154,6 +1184,77 @@
     }
 }
 
+/* ----------- TIMELINE PANEL FIX: Full height match to parent ----------- */
+.timeline-panel {
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent overflow */
+}
+
+/* ----------- BLUE DASHED LINE FIX ----------- */
+.timeline-scroll::before {
+    left: 22%; /* Center the line */
+    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+    /* width: 2px; */
+    background-color: #007bff; /* Blue color */
+    content: '';
+    position: absolute;
+    z-index: 2;
+}
+
+/* ----------- TIMELINE DOT CENTER FIX ----------- */
+.timeline-dot-container {
+    position: absolute; /* 🆕 Overlay it directly on dashed line */
+    left: 50%; /* 🆕 Align with center line */
+    transform: translateX(-50%); /* 🆕 Perfectly center the dot */
+    margin-left: 0 !important; /* 🆕 Reset previous margin */
+}
+
+/* ----------- TIMELINE CARD SPACING FIX ----------- */
+.timeline-content {
+    margin-left: 13px; /* 🆕 Pull content closer to the center */
+    padding: 8px 14px; /* 🆕 Slightly more padding for better readability */
+    min-height: 40px; /* 🆕 Slightly taller cards */
+    max-width: calc(100% - 60px); /* 🆕 Adjusted to avoid card shrinkage */
+}
+
+/* ----------- DOT SIZE TWEAK (OPTIONAL) ----------- */
+.timeline-dot {
+    width: 14px;
+    height: 14px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #007bff;
+}
+
+/* ----------- DATE WRAPPER ADJUSTMENT ----------- */
+.timeline-date-wrapper {
+    padding-right: 9px;
+    min-width: 27px; /* 🆕 Ensure enough space for date */
+    align-items: flex-start; /* 🆕 Align text to right if necessary */
+}
+
+/* ----------- RESPONSIVE PATCH (Mobile) ----------- */
+@media (max-width: 768px) {
+    .timeline-dot-container {
+        left: 50%; /* 🆕 Same central alignment on mobile */
+        transform: translateX(-50%);
+        margin-left: 0 !important;
+    }
+
+    .timeline-scroll::before {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .timeline-content {
+        margin-left: 20px; /* 🆕 Keep it readable on small screens */
+        max-width: calc(100% - 50px);
+    }
+}
+
 /* Main Panel Styles (Right Column) */
 .main-panel {
     flex: 1;
@@ -1176,12 +1277,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 20px;
+    padding: 16px 20px;
     border-bottom: 1px solid #e5e7eb;
     background-color: #f8f9fa;
     margin: 0;
     flex-shrink: 0; /* Prevent header from shrinking */
     min-height: 20px; /* Ensure consistent header height */
+    justify-content: space-between; /* Space between assessment info and controls */
 }
 
 .panel-header p {
@@ -2649,12 +2751,12 @@
 
 /* Ensure dot centering */
 .timeline-dot {
-    position: absolute;
-    left: -50px; /* Adjusted to center the dot on the line */
-    top: 50%;
+    position: relative;
+    left: -75px; /* Adjusted to center the dot on the line */
+    top: -10px;
     transform: translateY(-50%);
-    width: 14px;
-    height: 15px;
+    width: 11px;
+    height: 9px;
     border-radius: 50%;
     background-color: #ffffff;
     border: 4px solid #0070d2; /* Default border color */
@@ -2837,4 +2939,45 @@
 
 .cad-timeline_default .timeline-dot {
     border-color: #6c757d;
+}
+
+/* Add styling for assessment header info */
+.assessment-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    margin-right: 20px;
+}
+
+.assessment-header-info p {
+    margin: 0;
+    line-height: 1.3;
+}
+
+.assessment-header-info p:first-child {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.assessment-name {
+    font-size: 0.95em;
+    color: #555;
+    margin-top: 4px;
+}
+
+/* Mobile responsiveness for assessment header */
+@media (max-width: 768px) {
+    .assessment-header-info {
+        flex: 0 1 auto;
+        margin-right: 10px;
+    }
+
+    .assessment-header-info p:first-child {
+        font-size: 1em;
+    }
+
+    .assessment-name {
+        font-size: 0.9em;
+    }
 }

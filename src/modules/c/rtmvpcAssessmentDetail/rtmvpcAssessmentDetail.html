@@ -166,10 +166,11 @@
                                                 </template>
                                             </div>
                                         </div>
-                                        <div class="timeline-content">
+                                        <div>
                                             <h3 class="timeline-title">
                                                 {assessment.status}
                                             </h3>
+
                                             <p class="timeline-user">
                                                 {assessment.name}
                                             </p>
@@ -206,13 +207,20 @@
                                     </svg>
                                 </button>
                             </template>
-                            <p>
-                                <b
-                                    >{labels.details} :
-                                    {assessmentData.assessmentName}
-                                    {assessmentData.endDate}</b
-                                >
-                            </p>
+                            <div class="assessment-header-info">
+                                <p>
+                                    <b
+                                        >Status:
+                                        {assessmentData.accountAssessmentStatus}</b
+                                    >
+                                </p>
+                                <p class="assessment-name">
+                                    <b
+                                        >{assessmentData.assessmentName}
+                                        {assessmentData.endDate}</b
+                                    >
+                                </p>
+                            </div>
 
                             <!-- Control buttons -->
                             <div class="header-controls">
