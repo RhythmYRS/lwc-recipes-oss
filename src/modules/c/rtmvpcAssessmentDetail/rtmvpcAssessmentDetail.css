@@ -3,25 +3,43 @@
     --lwc-dot-left-value: 1rem;
     --lwc-dot-size: 0.625rem;
     --lwc-expand-collapse-height: 1.875rem;
+    font-family: 'Roboto', sans-serif; /* Apply Roboto font to the component host */
 }
 
-/* Make the component fill the available space */
+/* Make the component fill the available space and apply font */
 .main-container {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     max-width: 100%;
     overflow-x: hidden;
+    font-family: 'Roboto', sans-serif; /* Apply Roboto font to main container */
+}
+
+/* Apply Roboto to common text elements within the container for higher specificity */
+.main-container p,
+.main-container span,
+.main-container div,
+.main-container h1,
+.main-container h2,
+.main-container h3,
+.main-container h4,
+.main-container h5,
+.main-container h6,
+.main-container li,
+.main-container button,
+.main-container input,
+.main-container textarea {
+    font-family: 'Roboto', sans-serif;
 }
 
 .assessment-container {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     max-width: 100%;
 }
 
 .capa-scroll {
-    height: 100%;
-    overflow-y: auto;
+    min-height: 100vh;
 }
 
 .cad-timeline_progressline {
@@ -34,15 +52,14 @@
 .cad-cardbase {
     position: relative;
     border-radius: 0px;
-    overflow-y: auto;
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
 }
 
 .cad-tbl {
     display: flex;
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     flex-wrap: wrap;
 }
 
@@ -93,7 +110,7 @@
 
 .cad-sec_container {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     border-radius: 10px;
     border: 1px solid var(--cibcadcdg-bdr-color);
     background: var(--bg-primary-color1);
@@ -114,13 +131,11 @@
     align-items: center;
 }
 .cad-sec_bodyfull1 {
-    overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    height: 100%;
+    min-height: 100vh;
 }
 .cad-sec_bodyfull2 {
-    overflow-y: auto;
     overflow-x: hidden;
     position: relative;
 }
@@ -128,9 +143,6 @@
 .cad-listul li {
     margin: 0;
     padding: 0;
-}
-.cad-listul li {
-    border-bottom: 1px solid var(--cibcadcdg-bdr-color1);
 }
 
 .cad-mtype {
@@ -220,14 +232,12 @@
     width: 100%;
     position: relative;
     margin: var(--lwc-spacingMedium) 0px 114px;
-    overflow-y: auto;
 }
 .cad-sec_vcontainer2bdr {
     display: block;
     width: 100%;
     position: relative;
     margin: var(--lwc-spacingMedium) 0px var(--lwc-spacingLarge);
-    overflow-y: auto;
     background: var(--bg-primary-color1);
     border: 1px solid var(--cibcadcdg-bdr-color);
     border-bottom: 0px;
@@ -277,88 +287,172 @@
 }
 
 .cad-timeline_line {
-    position: relative;
-    border: 1px solid var(--pbtn-bdr);
-    background: var(--pbtn-bgh);
-    height: 100%;
+    position: absolute;
+    left: 21px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #d8d8d8;
+    z-index: 0;
 }
 .cad-timeline_slidebase {
     position: relative;
-    margin-left: 1.375rem;
-    width: 87%;
-    padding: 12px 0px 0px 0px;
+    margin-bottom: 25px;
+    padding: 0;
     line-height: normal;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
 }
 .cad-timeline_dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 2px solid #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
     position: relative;
-    top: var(--lwc-dot-top-value);
-    left: calc(var(--lwc-dot-left-value) * -1);
-    height: var(--lwc-dot-size);
-    width: var(--lwc-dot-size);
-    border-radius: 5px;
-    background: var(--bg-primary-color1);
-    border: 4px solid #999999;
+    margin-top: 6px;
 }
+
+.cad-timeline_dot svg {
+    width: 12px;
+    height: 12px;
+    display: block;
+    margin: auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+}
+
 .cad-timeline_datetime {
     font-size: var(--fs-12);
     color: #999999;
     padding-left: 3px;
 }
 .cad-timeline_content {
-    padding: 1px 10px;
-    background: #e5e4e4;
-    color: #707070;
-    border-radius: 4px;
-    border: 1px solid var(--cibcadcdg-bdr-color);
-}
-.cad-timeline_title {
-    font-size: var(--fs-14);
-    font-weight: var(--fw-600);
-}
-.cad-timeline_content span {
-    font-size: var(--fs-12);
-}
-
-.cad-approved,
-.cad-timeline_approved .cad-timeline_content {
-    background: #d1f7c4;
-    border: 1px solid #a6cf98;
-}
-.cad-rejected,
-.cad-timeline_rejected .cad-timeline_content {
-    background: #ffbdc7;
-    border: 1px solid #e0a2ab;
-}
-.cad-inprogress,
-.cad-timeline_submited .cad-timeline_content {
-    background: #d1f7c4;
-    border: 1px solid #d1f7c4;
-}
-.cad-default,
-.cad-timeline_default .cad-timeline_content {
-    background: #e5e4e4;
-    border: 1px solid #b9b9b9;
-}
-.cad-pending,
-.cad-timeline_pending .cad-timeline_content {
-    background: #ffebb3;
-    border: 1px solid #dbc790;
-}
-.cad-needmoreinfo,
-.cad-timeline_needmoreinfo .cad-timeline_content {
-    background: #d3b0e4;
-    border: 1px solid #b18ec2;
-}
-.cad-timeline_reviewcompleted .cad-timeline_content {
-    background: #d1f7c4;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 12px 15px;
+    border: 1px solid #e0e6ed;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    flex: 1;
+    transition: all 0.2s ease-in-out;
+    z-index: 1;
+    margin-right: 10px;
+    overflow: hidden;
 }
 
-.cad-timeline_customer .cad-timeline_dot {
-    border: 4px solid #af0000;
+/* Clear fix for floating elements */
+.timeline-content:after {
+    content: '';
+    display: table;
+    clear: both;
 }
-.cad-timeline_vendor .cad-timeline_dot {
-    border: 4px solid #0072f5;
+
+.timeline-date-column {
+    min-width: 100px;
+    padding-right: 10px;
+    border-right: 1px solid #e0e6ed;
+    margin-right: 10px;
+}
+
+.timeline-date {
+    color: #4a5568;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: block;
+}
+
+.timeline-time {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: block;
+    white-space: pre-line;
+}
+
+.timeline-content-column {
+    flex: 1;
+}
+
+.timeline-title {
+    color: #2d3748;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+}
+
+.timeline-body {
+    color: #4a5568;
+    line-height: 1.4;
+}
+
+.timeline-name {
+    color: #5c6b7f;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Status-specific styles */
+.cad-timeline_slidebase.cad-timeline_pending .timeline-content,
+.cad-timeline_slidebase.cad-timeline_inprogress .timeline-content {
+    border-left: 3px solid #3498db;
+}
+
+.cad-timeline_slidebase.cad-timeline_pending .timeline-dot,
+.cad-timeline_slidebase.cad-timeline_inprogress .timeline-dot {
+    border-color: #3498db;
+}
+
+.cad-timeline_slidebase.cad-timeline_submited .timeline-content {
+    border-left: 3px solid #2ecc71;
+}
+
+.cad-timeline_slidebase.cad-timeline_submited .timeline-dot {
+    border-color: #2ecc71;
+}
+
+.cad-timeline_slidebase.cad-timeline_default .timeline-content {
+    border-left: 3px solid #95a5a6;
+}
+
+.cad-timeline_slidebase.cad-timeline_default .timeline-dot {
+    border-color: #95a5a6;
+}
+
+/* Hover effect */
+.timeline-content:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .timeline-content {
+        flex-direction: column;
+    }
+
+    .timeline-date-column {
+        border-right: none;
+        border-bottom: 1px solid #e0e6ed;
+        padding-right: 0;
+        padding-bottom: 8px;
+        margin-right: 0;
+        margin-bottom: 8px;
+        min-width: auto;
+        width: 100%;
+    }
+
+    .timeline-date,
+    .timeline-time {
+        display: inline-block;
+        margin-right: 10px;
+    }
 }
 
 .cad-disc {
@@ -451,11 +545,11 @@
         display: flex;
     }
     .cad-cardbase {
-        height: calc(100vh - 45px);
+        min-height: calc(100vh - 45px);
     }
     .cad-row {
         display: flex;
-        height: 100%;
+        min-height: 100vh;
         position: relative;
         flex-direction: column;
         gap: 10px;
@@ -470,13 +564,13 @@
     .cad-type {
         display: block;
         position: relative;
-        height: 100%;
+        min-height: 100vh;
     }
     .cad-type.cadshowleft {
         display: table-cell;
         position: relative;
         z-index: 10;
-        height: 100%;
+        min-height: 100vh;
         width: 100%;
     }
     .cad-cel {
@@ -486,18 +580,18 @@
         display: block;
         position: relative;
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
     }
     .cad-disc {
         display: none;
         position: relative;
-        height: 100%;
+        min-height: 100vh;
         z-index: 10;
     }
     .cad-disc.cadshowright {
         display: table-cell;
         position: relative;
-        height: 100%;
+        min-height: 100vh;
         z-index: 10;
         width: 100%;
     }
@@ -520,13 +614,11 @@
         display: block;
         width: 100%;
         position: relative;
-        overflow-y: auto;
     }
     .cad-sec_vcontainer2_1 {
         display: block;
         width: 100%;
         position: relative;
-        overflow-y: auto;
     }
     .cad-sec_vcontainer2_2 {
         display: block;
@@ -596,13 +688,11 @@
         display: block;
         width: 100%;
         position: relative;
-        overflow-y: auto;
     }
     .cad-sec_vcontainer2_1 {
         display: block;
         width: 100%;
         position: relative;
-        overflow-y: auto;
     }
     .cad-sec_vcontainer2_2 {
         display: block;
@@ -677,7 +767,6 @@
 /* Full height for modal content */
 .slds-modal__content {
     flex-grow: 1;
-    overflow-y: auto;
     border-left: 1.5px solid #d4cdcd;
     border-right: 1.5px solid #d4cdcd;
 }
@@ -704,115 +793,395 @@
     z-index: 9999;
 }
 
-/* Styles for our mockup components */
+/* Two-Column Layout Container */
 .card {
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100%;
+    min-height: calc(100vh - 40px);
     max-width: 100%;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    align-items: stretch; /* Ensure both panels stretch to same height */
+    height: auto; /* Allow natural height expansion */
 }
 
-/* Timeline Panel Styles */
+/* Timeline Panel (Left Column) */
 .timeline-panel {
-    width: 300px;
+    flex: 0 0 25%; /* Reduced from 30% to 25% */
+    width: auto;
+    min-width: 300px; /* Reduced from 350px to 300px */
+    max-width: 250px; /* Reduced from 450px to 380px */
     background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
-    position: relative;
-    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    height: auto; /* Let it grow naturally */
+    min-height: calc(100vh - 80px); /* Match viewport height minus padding */
+    align-self: stretch; /* Stretch to match container height */
+    overflow: visible;
 }
 
-.timeline-header {
+.timeline-panel .panel-header {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f8f9fa;
+    margin: 0;
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+/* Timeline Styles - Compact Implementation */
+.timeline-container {
+    position: relative;
+    padding: 8px 20px; /* Further reduced vertical padding to move content up */
+    background-color: transparent;
+    width: 100%;
+    max-width: 100%; /* Use full panel width */
+    box-sizing: border-box;
+    overflow: visible;
+    flex: 1; /* Take remaining space in timeline panel */
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f9f9f9;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to top */
 }
 
 .timeline-scroll {
-    padding: 15px;
+    position: relative;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+    flex: 1; /* Take remaining space */
+    padding-top: 0; /* Remove any top padding to move content up */
 }
 
-.timeline-dot {
+/* Main timeline line that runs through all items - dashed blue line */
+.timeline-scroll::before {
+    content: '';
     position: absolute;
-    left: 15px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #0070d2;
-    margin-top: 5px;
+    left: 56px; /* Adjusted to align with new tighter dot centers */
+    top: 10px; /* Start line slightly below top to align with first item */
+    bottom: 0;
+    width: 0;
+    border-left: 2px dashed #007bff;
+    z-index: 0;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* Subtle hover effect for timeline line */
+.timeline-container:hover .timeline-scroll::before {
+    opacity: 1;
 }
 
 .cad-timeline_slidebase {
     position: relative;
-    padding-left: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 12px; /* Further reduced spacing to move items up */
+    margin-top: 0; /* Remove any top margin */
+    padding: 0;
+    display: flex;
+    align-items: center; /* Center all items vertically */
+    width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+    min-height: 42px; /* Further reduced height for compactness */
+}
+
+/* Add subtle fade-in animation for timeline items */
+.cad-timeline_slidebase {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* First timeline item positioning */
+.cad-timeline_slidebase:first-child {
+    margin-top: 5px; /* Small top margin for first item to move it up */
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Remove individual connecting lines - we now use a continuous line */
+
+.timeline-date-wrapper {
+    width: 50px; /* Reduced width for tighter spacing */
+    text-align: left;
+    padding-right: 6px; /* Reduced padding for tighter gap */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Align text to the left */
+    min-height: 34px; /* Further reduced to move content up */
+}
+
+.timeline-day {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1px;
+    line-height: 1.1;
 }
 
 .timeline-date {
-    font-size: 12px;
-    color: #706e6b;
-    margin-bottom: 5px;
+    color: #6b7280;
+    font-size: 0.75rem;
+    display: block;
+    font-weight: 400;
+}
+
+.timeline-dot-container {
+    position: relative;
+    width: 25px; /* Reduced width for tighter spacing */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center the dot vertically */
+    z-index: 2;
+    flex-shrink: 0;
+    min-height: 34px; /* Further reduced to move content up */
+    margin-left: 40px; /* Reduced margin for tighter gap */
+}
+
+.timeline-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: 3px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0 0 0 2px #007bff;
+    flex-shrink: 0; /* Prevent dot from shrinking */
+    transition: all 0.3s ease; /* Smooth hover transition */
+    cursor: pointer;
+}
+
+/* Hover effect for timeline dots */
+.timeline-dot:hover {
+    transform: scale(1.1);
+    box-shadow:
+        0 0 0 3px #007bff,
+        0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Different dot styles for different statuses */
+.cad-timeline_submited .timeline-dot {
+    background-color: #28a745;
+    box-shadow: 0 0 0 2px #28a745;
+}
+
+.cad-timeline_submited .timeline-dot:hover {
+    box-shadow:
+        0 0 0 3px #28a745,
+        0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.cad-timeline_default .timeline-dot {
+    background-color: #6c757d;
+    box-shadow: 0 0 0 2px #6c757d;
+}
+
+.cad-timeline_default .timeline-dot:hover {
+    box-shadow:
+        0 0 0 3px #6c757d,
+        0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.timeline-dot svg {
+    width: 10px;
+    height: 10px;
+    color: #ffffff;
 }
 
 .timeline-content {
-    background-color: #f0f0f0;
-    border-radius: 4px;
-    padding: 10px;
-    border: 1px solid #d8d8d8;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 5px 10px; /* Further reduced padding to move content up */
+    border: 1px solid #e0e6ed;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    position: relative;
+    flex: 1;
+    transition: all 0.2s ease-in-out;
+    z-index: 1;
+    min-height: 30px; /* Further reduced height */
+    max-width: calc(100% - 80px); /* Reduced for tighter spacing */
+    margin-left: -35px; /* Reduced margin for tighter gap */
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
 }
 
-.timeline-content h2 {
-    font-size: 14px;
-    margin: 0;
-    font-weight: 600;
-}
-
-.timeline-content span {
-    font-size: 12px;
-    color: #706e6b;
-}
-
-/* Status colors */
-.cad-timeline_reviewcompleted .timeline-content {
-    background-color: #d1f7c4;
-    border-color: #a6cf98;
-}
-
-.cad-timeline_pending .timeline-content {
-    background-color: #ffebb3;
-    border-color: #dbc790;
+/* Status-specific colored left borders */
+.cad-timeline_pending .timeline-content,
+.cad-timeline_inprogress .timeline-content {
+    border-left: 3px solid #1589ee;
 }
 
 .cad-timeline_submited .timeline-content {
-    background-color: #d1f7c4;
-    border-color: #a6cf98;
+    border-left: 3px solid #04844b;
 }
 
 .cad-timeline_default .timeline-content {
-    background-color: #e5e4e4;
-    border-color: #b9b9b9;
+    border-left: 3px solid #9ca3af;
 }
 
-/* Main Panel Styles */
+.timeline-title {
+    color: #2d3748;
+    font-size: 0.85rem; /* Slightly smaller for compactness */
+    font-weight: 600;
+    margin: 0 0 1px 0; /* Reduced margin */
+    line-height: 1.1;
+}
+
+.timeline-user {
+    color: #6b7280;
+    font-size: 0.7rem; /* Slightly smaller */
+    margin: 0;
+    line-height: 1;
+}
+
+.timeline-content:hover {
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+    transform: translateY(-1px);
+    border-color: #007bff;
+}
+
+/* Remove any existing timeline-line styles */
+.timeline-line {
+    display: none !important;
+}
+
+/* Ensure old timeline line styles don't interfere */
+.cad-timeline_line {
+    display: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .timeline-container {
+        padding: 6px 15px; /* Further reduced vertical padding for mobile */
+        max-width: 100%;
+    }
+
+    .timeline-scroll::before {
+        left: 44px; /* Adjusted for tighter mobile spacing */
+        top: 8px; /* Start line closer to top on mobile */
+    }
+
+    .cad-timeline_slidebase {
+        margin-bottom: 10px; /* More compact on mobile */
+        min-height: 38px; /* Smaller on mobile */
+    }
+
+    .timeline-date-wrapper {
+        width: 42px; /* Reduced for tighter mobile spacing */
+        padding-right: 4px; /* Reduced padding */
+        min-height: 32px; /* Compact mobile height */
+    }
+
+    .timeline-day {
+        font-size: 0.85rem;
+    }
+
+    .timeline-date {
+        font-size: 0.7rem;
+    }
+
+    .timeline-dot-container {
+        width: 22px; /* Reduced for tighter spacing */
+        min-height: 32px; /* Compact mobile height */
+        margin-left: 28px; /* Reduced for tighter mobile spacing */
+    }
+
+    .timeline-dot {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #ffffff;
+        box-shadow: 0 0 0 1.5px #007bff;
+    }
+
+    .cad-timeline_submited .timeline-dot {
+        box-shadow: 0 0 0 1.5px #28a745;
+    }
+
+    .cad-timeline_default .timeline-dot {
+        box-shadow: 0 0 0 1.5px #6c757d;
+    }
+
+    .timeline-date-wrapper {
+        min-height: 35px; /* Match mobile dot container */
+    }
+
+    .timeline-dot svg {
+        width: 8px;
+        height: 8px;
+    }
+
+    .timeline-content {
+        padding: 5px 10px; /* More compact mobile padding */
+        max-width: calc(100% - 100px); /* Reduced for tighter mobile spacing */
+        min-height: 28px; /* Compact mobile height */
+        margin-left: 3px; /* Reduced margin for tighter gap */
+        box-sizing: border-box;
+    }
+
+    .timeline-title {
+        font-size: 0.75rem; /* Compact mobile text */
+        margin-bottom: 1px;
+        line-height: 1;
+    }
+
+    .timeline-user {
+        font-size: 0.65rem; /* Compact mobile text */
+        line-height: 1;
+    }
+}
+
+/* Main Panel Styles (Right Column) */
 .main-panel {
     flex: 1;
     background-color: #ffffff;
-    padding: 15px;
-    overflow-y: auto;
+    padding: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    min-width: 0; /* Allows flex item to shrink below content size */
+    display: flex;
+    flex-direction: column;
+    height: auto; /* Let it grow naturally */
+    min-height: calc(100vh - 80px); /* Match timeline panel height */
+    box-sizing: border-box;
+    overflow: visible;
+    align-self: stretch; /* Stretch to match container height */
 }
 
 .panel-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f8f9fa;
+    margin: 0;
+    flex-shrink: 0; /* Prevent header from shrinking */
+    min-height: 20px; /* Ensure consistent header height */
 }
 
 .panel-header p {
@@ -863,113 +1232,369 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 20px;
+    flex: 1;
+    box-sizing: border-box;
+    overflow: visible;
 }
 
 .assessment-area {
-    width: 100%;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: #f4f7fb; /* soft blue-gray */
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    margin: 0 0 18px 0; /* Remove auto margins, use full width */
+    box-shadow: 0 2px 8px rgba(90, 62, 132, 0.06);
+    transition:
+        box-shadow 0.2s,
+        border-color 0.2s,
+        background 0.2s;
+    padding: 0;
+    width: 100%; /* Use full width of container */
+    box-sizing: border-box;
+    overflow: visible;
 }
-
-.assessment-area:hover {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+.assessment-area:hover,
+.assessment-area:focus-within {
+    background: #eaf1fa;
+    border-color: #b3c6e0;
+    box-shadow: 0 4px 16px rgba(90, 62, 132, 0.12);
 }
-
 .area-header {
     display: flex;
+    flex-direction: row; /* Ensure horizontal layout on large screens */
     align-items: center;
-    padding: 12px;
+    background: #cbdbff;
+    border-radius: 10px 10px 0 0;
+    padding: 16px 20px;
     cursor: pointer;
-    background-color: #f8f8f8;
-    transition: background-color 0.2s ease;
-    width: 100%;
-}
-
-.area-header:hover {
-    background-color: #f0f0f0;
-}
-
-.area-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-}
-
-.area-title {
-    flex: 1;
     font-weight: 600;
-    font-size: 16px;
-    color: #333;
-    white-space: normal;
-    word-break: break-word;
-    cursor: pointer;
-    padding: 5px;
-    position: relative;
-    z-index: 2;
+    color: #3a3a4c;
+    font-size: 1.1rem;
+    transition:
+        background 0.2s,
+        color 0.2s;
+    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    justify-content: space-between; /* Space between title and metrics */
+    box-sizing: border-box;
+    overflow: visible;
+    min-height: 60px;
 }
-
-.area-title:hover {
-    color: #0070d2;
-    text-decoration: underline;
+.area-header:hover,
+.area-header:focus {
+    background: #bdd1ff;
+    color: #5a3e84;
 }
-
+.area-title {
+    flex: 1 1 auto; /* Allow growing and shrinking, basis based on content */
+    margin-right: 20px; /* Space between title and metrics */
+    min-width: 200px; /* Increased min-width for better title visibility */
+    font-size: 1.08rem;
+    color: #3a3a4c;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap; /* Prevent title text wrapping initially */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Show ellipsis for truncated text */
+    box-sizing: border-box;
+}
 .area-metrics {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-left: auto;
+    gap: 8px; /* Slightly reduced gap for better fit */
+    margin-left: auto; /* Push metrics block to the right */
+    flex: 0 0 auto; /* Prevent growing and shrinking, size based on content */
+    align-items: center;
+    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    justify-content: flex-end; /* Align metric items to the right within their container */
+    min-width: 400px; /* Ensure sufficient space for all metrics */
+    box-sizing: border-box;
+    overflow: visible;
 }
-
 .area-metric {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 70px;
-    padding: 0 8px;
-    text-align: center;
+    align-items: flex-start;
+    min-width: 60px; /* Increased min-width for better visibility */
+    padding: 0 4px; /* Slightly reduced padding */
+    box-sizing: border-box;
+    flex-shrink: 0; /* Prevent shrinking */
 }
-
 .metric-label {
-    font-size: 12px;
-    color: #666;
+    font-size: 0.85rem;
+    color: #3a3a4c;
     margin-bottom: 2px;
+    font-weight: 500;
 }
-
 .metric-value {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
+    font-size: 1rem;
+    color: #5a3e84;
+    font-weight: 700;
+    margin-left: 18px;
+}
+.area-details {
+    background: #e6edff; /* Very light off-white/blue tint */
+    border-radius: 0 0 10px 10px;
+    padding: 1px 29px; /* Reduced vertical padding */
+    border-top: 1px solid #e0e6ed;
+    box-shadow: 0 2px 8px rgba(90, 62, 132, 0.04);
+    display: flex; /* Use flexbox for layout within area-details */
+    flex-direction: column; /* Stack children vertically */
+    gap: 5px; /* Reduced space between area-content and area-actions */
 }
 
-/* Action Buttons */
-.action-buttons {
+.area-content {
+    padding: 0; /* Remove padding here as it's in area-details */
+    background-color: transparent; /* Remove background */
+    border-radius: 0; /* Remove border radius */
+    margin-top: 0; /* Remove margin-top */
+    flex-shrink: 0; /* Prevent shrinking */
+    width: 100%;
+    /* Ensure area-content does not grow and take all space */
+    flex-grow: 0;
+}
+
+.area-content p {
+    font-size: 14px;
+    color: #2b2b2b;
+    margin-bottom: 8px; /* Reduced margin after question */
+    font-weight: 500;
+    position: relative;
+    padding-left: 24px;
+}
+
+.area-content p:before {
+    content: 'Q:';
+    position: absolute;
+    left: 0;
+    color: #5a3e84;
+    font-weight: 600;
+}
+
+.area-content .response-input {
+    margin-top: 4px; /* Slightly reduced top margin */
+    margin-left: 24px;
+    /* Reduce width */
+    width: 80%;
+}
+
+.area-content .response-input textarea {
+    width: 100%;
+    min-height: 30px; /* Reduced minimum height */
+    padding: 10px;
+    border: 1px solid #d8d8d8;
+    background-color: #fafbff;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 0.9rem;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    line-height: 0.5;
+}
+
+.area-content .response-input textarea:focus {
+    outline: none;
+    border-color: #0070d8; /* Salesforce blue */
+    box-shadow: 0 0 4px rgba(0, 112, 216, 0.3); /* Blue shadow on focus */
+}
+
+.area-content .response-input textarea::placeholder {
+    color: #b0b0b0;
+}
+
+.area-content .response-input textarea:disabled {
+    cursor: not-allowed;
+}
+
+.area-content .response-input textarea:disabled:hover {
+    border-color: red; /* Red border on hover when disabled */
+}
+
+.area-content .response-input textarea:disabled:hover {
+    border-color: red; /* Red border on hover when disabled */
+}
+
+.area-content .response-input textarea:disabled:hover {
+    border-color: red; /* Red border on hover when disabled */
+}
+
+.area-content .response-status {
+    margin-top: 8px;
+    margin-left: 24px;
+    font-size: 12px;
+    color: #706e6b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.area-content .response-status.saved {
+    color: #04844b;
+}
+
+.area-content .response-status.error {
+    color: #c23934;
+}
+
+/* Ensure area-actions is always visible and below area-content */
+.area-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 0; /* Remove padding here */
+    background: none;
+    border: none;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0; /* Ensure no extra space is added */
+    flex-shrink: 0; /* Prevent shrinking */
+    width: 100%;
+    padding-top: 10px; /* Reduced space above actions */
+    /* Removed min-height */
+}
+
+/* Adjust padding for area-details on smaller screens */
+@media (max-width: 768px) {
+    .area-details {
+        padding: 14px 18px 12px 18px; /* Adjusted padding */
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .area-title {
+        min-width: 180px; /* Adjust min-width */
+        margin-right: 16px;
+    }
+    .area-metrics {
+        gap: 6px; /* Reduced gap */
+        min-width: 360px; /* Adjust min-width */
+    }
+    .area-metric {
+        min-width: 55px; /* Adjusted min-width */
+        padding: 0 3px; /* Reduced padding */
+    }
+}
+
+@media (max-width: 1100px) {
+    .area-title {
+        min-width: 160px; /* Further adjust base width */
+        margin-right: 12px;
+    }
+    .area-metrics {
+        gap: 5px; /* Further reduced gap */
+        min-width: 320px; /* Adjust min-width */
+    }
+    .area-metric {
+        min-width: 50px; /* Adjusted min-width */
+        padding: 0 2px; /* Further reduced padding */
+    }
+}
+
+@media (max-width: 900px) {
+    .area-title {
+        min-width: 140px; /* Adjust base width */
+        margin-right: 10px;
+    }
+    .area-metrics {
+        min-width: 280px; /* Adjust min-width */
+        gap: 4px; /* Further reduced gap */
+    }
+    .area-metric {
+        min-width: 45px; /* Further reduced min-width */
+        padding: 0 1px; /* Minimal padding */
+    }
+}
+
+@media (max-width: 768px) {
+    .area-header {
+        flex-direction: column; /* Stack title and metrics vertically */
+        align-items: flex-start;
+        padding: 12px 8px;
+        flex-wrap: wrap; /* Allow wrapping on mobile */
+    }
+    .area-title {
+        margin-right: 0; /* Remove right margin when stacked */
+        margin-bottom: 8px; /* Add bottom margin when stacked */
+        min-width: unset; /* Allow title to take full width */
+        width: 100%; /* Title takes full width when stacked */
+        white-space: normal; /* Allow title to wrap when stacked */
+        overflow: visible;
+        text-overflow: unset;
+        flex-basis: auto; /* Reset flex-basis */
+    }
+    .area-metrics {
+        margin-left: 0; /* Remove left margin when stacked */
+        width: 100%; /* Metrics take full width when stacked */
+        margin-top: 8px; /* Add top margin when stacked */
+        justify-content: space-between; /* Space between metric items when stacked */
+        gap: 8px; /* Adjust gap */
+        flex-wrap: wrap; /* Allow wrapping on mobile */
+        min-width: unset; /* Remove min-width when stacked */
+    }
+    .area-metric {
+        flex-basis: calc(50% - 4px); /* Two items per row */
+        min-width: unset; /* Remove min-width constraint on mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .area-metrics {
+        gap: 8px; /* Adjust gap on mobile */
+        flex-direction: column; /* Stack metrics vertically */
+    }
+    .area-metric {
+        min-width: 100%;
+        flex-basis: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 12px;
+        border: 1px solid #e0e6ed;
+        border-radius: 4px;
+        background-color: #f9f9fc;
+    }
+    .metric-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #3a3a4c;
+    }
+    .metric-value {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #5a3e84;
+    }
+}
+
+/* Action Buttons Container */
+.action-buttons-container {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e5e7eb;
+    padding: 15px 20px;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    padding: 10px 16px;
-    background-color: #f8f8f8;
-    border-top: 1px solid #e5e5e5;
-    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 20px;
+    box-sizing: border-box;
+    overflow: visible;
+    min-width: 0; /* Allow container to shrink if needed */
+}
+
+/* Main Action Buttons Styling */
+.main-action-button {
+    margin: 0;
+    float: none;
 }
 
 .action-button {
     padding: 8px 16px;
     border-radius: 4px;
-    border: 1px solid #d8dde6;
-    font-weight: 600;
+    border: 1px solid #0176d3; /* Use Salesforce Blue border */
+    font-weight: 500;
     font-size: 13px;
     cursor: pointer;
-    background-color: #fff;
-    color: #0070d2;
+    background-color: #0176d3; /* Use Salesforce Blue */
+    color: white; /* White text for readability */
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
@@ -977,68 +1602,105 @@
 }
 
 .action-button:hover {
-    background-color: #f4f6f9;
-    border-color: #0070d2;
+    background-color: #005fb2; /* Darker blue on hover */
+    border-color: #005fb2; /* Darker blue border on hover */
+    color: white; /* Keep text white */
 }
 
 /* Save and Review button styles */
-.save-button,
-.review-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-weight: 600;
-    padding: 10px 16px;
+.action-button.save-button {
+    /* These styles are now covered by .action-button */
+}
+
+.action-button.save-button:hover {
+    /* These styles are now covered by .action-button:hover */
+}
+
+.action-button.review-button {
+    background-color: #7cb342; /* Darker green on hover */
+    border-color: #558b2f; /* Even darker green border */
     color: white;
 }
 
-.save-button {
-    background-color: #5a3e84;
-}
-
-.save-button:hover {
-    background-color: #48326a;
-}
-
-.review-button {
-    background-color: #8e67b6;
-}
-
-.review-button:hover {
-    background-color: #7a569e;
+.action-button.review-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    border-color: #1e7e34; /* Even deeper green for border */
+    color: white; /* Maintain contrast */
 }
 
 .save-icon,
 .review-icon {
     font-size: 16px;
+    /* Ensure icons are white for blue buttons */
+    color: white;
+}
+
+/* Ensure the review icon is the correct green color when the button is green */
+.action-button.review-button .review-icon {
+    color: white; /* White icon color */
+}
+
+.action-button.review-button:hover .review-icon {
+    color: white; /* White icon on hover */
+}
+
+/* Ensure metrics are always visible on larger screens */
+@media (min-width: 1400px) {
+    .area-metrics {
+        min-width: 480px; /* More space for larger screens */
+        gap: 12px;
+    }
+    .area-metric {
+        min-width: 70px;
+        padding: 0 6px;
+    }
 }
 
 /* Comprehensive responsive layout */
 @media (max-width: 1200px) {
     .area-metrics {
         flex-wrap: wrap;
-        gap: 5px;
+        gap: 10px;
     }
 
     .area-metric {
-        min-width: 60px;
+        min-width: 70px;
+        padding: 0 4px;
+    }
+    .metric-label {
+        font-size: 0.8rem;
+    }
+    .metric-value {
+        font-size: 1.2rem;
     }
 }
 
 @media (max-width: 992px) {
     .card {
         flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        min-height: auto;
     }
 
     .timeline-panel {
         width: 100%;
         max-width: 100%;
-        max-height: 300px;
+        min-width: 280px; /* Maintain minimum width on medium screens */
+        flex: none;
+        height: auto;
+    }
+
+    .timeline-container {
+        max-width: 100%;
     }
 
     .main-panel {
         width: 100%;
+        flex: none;
+        padding: 0;
+        min-height: auto;
+        height: auto;
     }
 
     .area-metrics {
@@ -1053,59 +1715,167 @@
 }
 
 @media (max-width: 768px) {
+    .card {
+        gap: 10px;
+        padding: 10px;
+        min-height: auto;
+    }
+
+    .timeline-panel {
+        order: 2; /* Move timeline below main content on mobile */
+        height: auto;
+    }
+
+    .main-panel {
+        order: 1;
+        padding: 0;
+        min-height: auto;
+        height: auto;
+    }
+
+    .timeline-container {
+        margin: 0;
+    }
+
     .header-controls {
         flex-wrap: wrap;
         gap: 5px;
     }
 
     .area-header {
-        flex-wrap: wrap;
+        flex-direction: column; /* Stack title and metrics vertically on smaller screens */
+        align-items: flex-start;
+        padding: 10px 6px;
     }
-
+    .area-title {
+        margin-right: 0;
+        margin-bottom: 8px;
+        min-width: 120px;
+        width: 100%;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+    }
     .area-metrics {
+        margin-left: 0;
         width: 100%;
         margin-top: 8px;
         justify-content: space-between;
-    }
-
-    .area-metric {
-        min-width: 45%;
-        margin-bottom: 5px;
-    }
-
-    .action-buttons {
+        gap: 12px;
         flex-wrap: wrap;
     }
+    .area-metric {
+        min-width: unset;
+        flex-basis: calc(50% - 6px);
+        margin-bottom: 5px;
+        padding: 0;
+    }
 
-    .action-button {
-        flex: 1;
+    .action-buttons-container {
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px 15px;
+    }
+
+    .main-action-button {
+        width: 100%;
         min-width: 120px;
+    }
+
+    .area-details {
+        padding: 14px 18px 12px 18px;
+    }
+    .area-content p {
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+    }
+    .area-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
     }
 }
 
 @media (max-width: 576px) {
-    .area-metric {
-        min-width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 2px 8px;
-    }
-
-    .metric-label {
-        margin-bottom: 0;
-    }
-
-    .action-button {
-        width: 100%;
-    }
-
     .card {
+        gap: 8px;
+        padding: 8px;
         border-radius: 0;
         margin: 0;
+        min-height: auto;
+    }
+
+    .timeline-panel,
+    .main-panel {
+        border-radius: 6px;
+    }
+
+    .timeline-panel {
+        padding: 10px;
+    }
+
+    .timeline-panel .panel-header,
+    .main-panel .panel-header {
+        padding: 12px;
+    }
+
+    .timeline-panel .panel-header {
+        margin: -10px -10px 15px -10px;
+    }
+
+    .assessment-areas {
+        padding: 12px;
+    }
+
+    .area-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 2px;
+    }
+    .area-title {
+        width: 100%;
+        min-width: 60px;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    .area-metrics {
+        gap: 8px;
+        flex-direction: column;
+    }
+    .area-metric {
+        min-width: 100%;
+        flex-basis: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 12px;
+        border: 1px solid #e0e6ed;
+        border-radius: 4px;
+        background-color: #f9f9fc;
+    }
+    .metric-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #3a3a4c;
+    }
+    .metric-value {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #5a3e84;
+    }
+
+    .action-buttons-container {
+        padding: 10px 12px;
+    }
+
+    .main-action-button {
+        width: 100%;
     }
 
     .area-actions {
         flex-direction: column;
+        align-items: stretch;
         gap: 8px;
     }
 
@@ -1121,6 +1891,14 @@
     .save-icon,
     .review-icon {
         font-size: 14px;
+    }
+
+    .area-details {
+        padding: 10px 12px 8px 12px;
+    }
+    .area-content p {
+        margin-bottom: 10px;
+        font-size: 0.85rem;
     }
 }
 
@@ -1143,8 +1921,8 @@
     border-left: 1px solid #e0e0e0;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow: hidden;
+    height: fit-content;
+    min-height: 500px;
 }
 
 .right-panel .panel-header {
@@ -1158,47 +1936,7 @@
 
 .panel-content {
     flex: 1;
-    overflow-y: auto;
     padding: 15px;
-}
-
-/* Area details styles */
-.area-details {
-    padding: 15px;
-    border-top: 1px solid #e0e0e0;
-    background-color: #fff;
-    display: block;
-    transition:
-        max-height 0.3s ease,
-        opacity 0.3s ease;
-    overflow: hidden;
-}
-
-.area-content {
-    margin-bottom: 15px;
-}
-
-.area-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 16px;
-    background-color: #f8f8f8;
-    border-top: 1px solid #e5e5e5;
-    transition: all 0.3s ease;
-}
-
-.area-actions .action-button {
-    background-color: #f0f0f0;
-    border: 1px solid #d8d8d8;
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.area-actions .action-button:hover {
-    background-color: #e0e0e0;
 }
 
 /* Comments section styles */
@@ -1248,17 +1986,18 @@
 }
 
 .send-button {
-    align-self: flex-end;
-    background-color: #5a3e84;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 15px;
-    cursor: pointer;
+    align-self: flex-end; /* Keep positioning */
+    /* Remove background, color, and border to inherit from .create-button */
+    /* background-color: #5a3e84; */
+    /* color: white; */
+    /* border: none; */
+    /* border-radius: 4px; */
+    /* cursor: pointer; */
 }
 
 .send-button:hover {
-    background-color: #48326a;
+    /* Remove background-color to inherit from .create-button:hover */
+    /* background-color: #48326a; */
 }
 
 /* Findings section styles */
@@ -1289,12 +2028,42 @@
 }
 
 /* Files section styles */
-.files-section {
+/* Renamed to Tasks section styles */
+.tasks-section {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+.task-item {
+    background-color: #f9f9f9; /* Light background */
+    border: 1px solid #e0e0e0; /* Subtle border */
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.task-subject {
+    font-weight: 600;
+    color: #5a3e84; /* Consistent color with other headers */
+}
+
+.task-comments {
+    font-size: 0.95rem;
+    color: #555; /* Readable text color */
+    line-height: 1.5;
+}
+
+.task-dueDate {
+    font-size: 0.9rem;
+    color: #706e6b; /* Secondary text color */
+    margin-top: 5px;
+}
+
+/* Remove old file specific styles */
+/*
 .file-list {
     display: flex;
     flex-direction: column;
@@ -1331,6 +2100,7 @@
 .upload-button:hover {
     background-color: #48326a;
 }
+*/
 
 /* Emails section styles */
 .emails-section {
@@ -1381,16 +2151,17 @@
 }
 
 .compose-button {
-    background-color: #5a3e84;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 15px;
-    cursor: pointer;
+    /* Remove background, color, border to inherit from .create-button */
+    /* background-color: #5a3e84; */
+    /* color: white; */
+    /* border: none; */
+    /* border-radius: 4px; */
+    /* cursor: pointer; */
 }
 
 .compose-button:hover {
-    background-color: #48326a;
+    /* Remove background-color to inherit from .create-button:hover */
+    /* background-color: #48326a; */
 }
 
 /* Modal styles for mobile */
@@ -1404,680 +2175,96 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9000;
+    z-index: 1000;
 }
 
 .modal-container {
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    background-color: white;
-    border-radius: 4px;
+    background-color: #ffffff;
+    border-radius: 8px;
     overflow: hidden;
+    width: 95%; /* Increase width */
+    max-width: 600px; /* Increase max width */
     display: flex;
     flex-direction: column;
+    max-height: 95%; /* Increase max height */
+    height: auto; /* Allow height to adjust based on content, up to max-height */
 }
 
 .modal-header {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
     background-color: #f9f9f9;
-    border-bottom: 1px solid #e0e0e0;
 }
 
 .modal-header h2 {
     margin: 0;
-    font-size: 18px;
+    font-size: 1.2rem;
+    color: #5a3e84;
 }
 
 .modal-content {
-    flex: 1;
-    overflow-y: auto;
     padding: 15px;
-}
-
-/* Dropdown menu */
-.dropdown-wrapper {
-    position: relative;
-}
-
-.dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    min-width: 150px;
-    display: none;
-}
-
-.dropdown.show {
-    display: block;
-}
-
-.dropdown li {
-    padding: 8px 15px;
-    cursor: pointer;
-    list-style: none;
-}
-
-.dropdown li:hover {
-    background-color: #f5f5f5;
-}
-
-.dropdown li.highlight-menu-item {
-    background-color: #5a3e84;
-    color: white;
-}
-
-/* Responsive styles */
-@media (max-width: 992px) {
-    .card {
-        flex-direction: column;
-        height: auto;
-    }
-
-    .timeline-panel {
-        width: 100%;
-        max-height: 300px;
-    }
-
-    .timeline-panel.hidden {
-        display: none;
-    }
-
-    .right-panel {
-        width: 100%;
-    }
-
-    .area-metrics {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .header-controls {
-        flex-wrap: wrap;
-    }
-}
-
-/* Main container */
-.main-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    font-family: Arial, sans-serif;
-}
-
-/* Tab navigation */
-.tab-container {
-    display: flex;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f5f5f5;
-}
-
-.tab {
-    padding: 12px 24px;
-    cursor: pointer;
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-}
-
-.tab.active {
-    color: #5a3e84;
-    border-bottom-color: #5a3e84;
-    background-color: #fff;
-}
-
-.assessment-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-/* Card layout */
-.card {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    background-color: #f8f8f8;
-}
-
-/* Timeline Panel Styles */
-.timeline-panel {
-    width: 230px;
-    background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
-    display: flex;
-    flex-direction: column;
-}
-
-.timeline-panel.hidden {
-    display: none;
-}
-
-.timeline-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f9f9f9;
-}
-
-.timeline-container {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-}
-
-.timeline-line {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 15px;
-    width: 1px;
-    background-color: #d8d8d8;
-}
-
-.timeline-scroll {
-    height: 100%;
     overflow-y: auto;
-    padding: 10px;
+    flex-grow: 1;
 }
 
-.cad-timeline_slidebase {
-    position: relative;
-    margin-left: 22px;
+.form-element {
     margin-bottom: 20px;
-    padding-top: 10px;
 }
 
-.timeline-dot {
-    position: absolute;
-    left: -16px;
-    top: 10px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: white;
-    border: 4px solid #999999;
-    z-index: 1;
-}
-
-.timeline-date {
-    font-size: 12px;
-    color: #999999;
+.form-element label {
+    display: block;
     margin-bottom: 5px;
+    font-weight: 500;
+    color: #5a3e84;
 }
 
-.timeline-content {
-    background-color: #e5e4e4;
+.form-element input[type='text'],
+.form-element textarea,
+.form-element select {
+    width: 100%;
+    padding: 8px;
     border: 1px solid #d8d8d8;
     border-radius: 4px;
-    padding: 10px;
-    color: #707070;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    line-height: 1.4;
 }
 
-.timeline-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
+.form-element input[type='text']:focus,
+.form-element textarea:focus,
+.form-element select:focus {
+    outline: none;
+    border-color: #0070d8;
+    box-shadow: 0 0 4px rgba(0, 112, 216, 0.3);
 }
 
-.timeline-name {
-    font-size: 12px;
+.form-element textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
-/* Timeline status colors */
-.cad-timeline_customer .timeline-dot {
-    border-color: #af0000;
-}
-
-.cad-timeline_vendor .timeline-dot {
-    border-color: #0072f5;
-}
-
-.cad-timeline_pending .timeline-content {
-    background-color: #ffebb3;
-    border-color: #dbc790;
-}
-
-.cad-timeline_submited .timeline-content {
-    background-color: #d1f7c4;
-    border-color: #a6cf98;
-}
-
-.cad-timeline_reviewcompleted .timeline-content {
-    background-color: #d1f7c4;
-    border-color: #a6cf98;
-}
-
-.cad-timeline_default .timeline-content {
-    background-color: #e5e4e4;
-    border-color: #b9b9b9;
-}
-
-/* Main Panel Styles */
-.main-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #ffffff;
-    overflow: hidden;
-}
-
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.panel-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
-}
-
-/* Assessment Areas */
-.assessment-areas {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
-}
-
-.assessment-area {
+.file-upload label {
     margin-bottom: 10px;
+}
+
+.upload-area {
+    border: 2px dashed #d8d8d8;
     border-radius: 4px;
-    overflow: hidden;
+    padding: 20px;
+    text-align: center;
     background-color: #f9f9f9;
-}
-
-.area-header {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    cursor: pointer;
-    background-color: #f8f8f8;
-    transition: background-color 0.2s ease;
-    width: 100%;
-}
-
-.area-header:hover {
-    background-color: #f0f0f0;
-}
-
-.area-icon {
-    width: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #5a3e84;
-}
-
-.area-title {
-    flex: 1;
-    font-weight: 600;
-    font-size: 16px;
-    color: #333;
-    white-space: normal;
-    word-break: break-word;
-    cursor: pointer;
-    padding: 5px;
-    position: relative;
-    z-index: 2;
-}
-
-.area-title:hover {
-    color: #0070d2;
-    text-decoration: underline;
-}
-
-.area-metrics {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.area-metric {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-width: 60px;
-}
-
-.metric-label {
-    font-size: 11px;
-    color: #706e6b;
-}
-
-.metric-value {
-    font-weight: 600;
-    font-size: 13px;
-    color: #333;
-}
-
-.area-details {
-    padding: 15px;
-    border-top: 1px solid #e0e0e0;
-    background-color: #fff;
-    display: block;
-    transition:
-        max-height 0.3s ease,
-        opacity 0.3s ease;
-    overflow: hidden;
-}
-
-.area-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 16px;
-    background-color: #f8f8f8;
-    border-top: 1px solid #e5e5e5;
-    transition: all 0.3s ease;
-}
-
-/* Action Buttons */
-.action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 15px;
-    border-top: 1px solid #e0e0e0;
-}
-
-.action-button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    background-color: #f2f2f2;
-    color: #333;
-}
-
-.action-button:hover {
-    background-color: #e5e5e5;
-}
-
-.save-button,
-.review-button {
-    background-color: #5a3e84;
-    color: white;
-}
-
-.save-button:hover,
-.review-button:hover {
-    background-color: #48326a;
-}
-
-/* Icon button */
-.icon-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    color: #5a3e84;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Icons */
-.icon {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-}
-
-.icon-chevron-left::before {
-    content: '←';
-}
-
-.icon-chevron-right::before {
-    content: '→';
-}
-
-.icon-plus-square::before {
-    content: '⊞';
-}
-
-.icon-minus-square::before {
-    content: '⊟';
-}
-
-.icon-filter::before {
-    content: '⚙';
-}
-
-.icon-download::before {
-    content: '⇩';
-}
-
-.icon-pencil::before {
-    content: '✎';
-}
-
-.icon-edit::before {
-    content: '✏';
-}
-
-.icon-angle-down::before {
-    content: '▼';
-}
-
-.icon-angle-right::before {
-    content: '▶';
-}
-
-.icon-times::before {
-    content: '✕';
-}
-
-.icon-file-pdf::before {
-    content: '📄';
-}
-
-.icon-file-excel::before {
-    content: '📊';
-}
-
-.icon-file-word::before {
-    content: '📝';
-}
-
-/* Dropdown menu */
-.dropdown-wrapper {
-    position: relative;
-}
-
-.dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    min-width: 150px;
-    display: none;
-}
-
-.dropdown.show {
-    display: block;
-}
-
-.dropdown li {
-    padding: 8px 15px;
-    cursor: pointer;
-    list-style: none;
-}
-
-.dropdown li:hover {
-    background-color: #f5f5f5;
-}
-
-.dropdown li.highlight-menu-item {
-    background-color: #5a3e84;
-    color: white;
-}
-
-/* Right Panel */
-.right-panel {
-    width: 300px;
-    border-left: 1px solid #e0e0e0;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Comments Section */
-.comments-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.comment {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 10px;
-}
-
-.comment-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-
-.comment-author {
-    font-weight: 600;
-    color: #5a3e84;
-}
-
-.comment-date {
-    color: #706e6b;
-    font-size: 12px;
-}
-
-.comment-input {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.comment-input textarea {
-    width: 100%;
-    height: 80px;
-    padding: 8px;
-    border: 1px solid #d8d8d8;
-    border-radius: 4px;
-    resize: none;
-}
-
-.send-button {
-    align-self: flex-end;
-    background-color: #5a3e84;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 15px;
-    cursor: pointer;
-}
-
-/* Findings Section */
-.findings-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.finding {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 10px;
-}
-
-.finding h4 {
-    margin: 0 0 5px 0;
-    color: #5a3e84;
-}
-
-.finding-meta {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
-    font-size: 12px;
-    color: #706e6b;
-}
-
-/* Files Section */
-.files-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.file-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.file-item {
-    display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-}
-
-.file-item i {
-    color: #5a3e84;
-}
-
-.file-upload {
-    margin-top: 10px;
 }
 
 .upload-button {
-    background-color: #5a3e84;
+    background-color: #0176d3;
     color: white;
     border: none;
     border-radius: 4px;
@@ -2085,131 +2272,66 @@
     cursor: pointer;
 }
 
-/* Emails Section */
-.emails-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.upload-button:hover {
+    background-color: #005fb2;
 }
 
-.email-list {
+.upload-area span {
+    color: #706e6b;
+    font-size: 0.9rem;
+}
+
+.modal-footer {
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
     gap: 10px;
-}
-
-.email-item {
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
     background-color: #f9f9f9;
 }
 
-.email-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.email-subject {
-    font-weight: 600;
-    color: #5a3e84;
-}
-
-.email-date {
-    color: #706e6b;
-    font-size: 12px;
-}
-
-.email-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    font-size: 12px;
-    color: #706e6b;
-}
-
-.compose-button {
-    background-color: #5a3e84;
-    color: white;
-    border: none;
+.modal-footer .action-button {
+    padding: 8px 16px;
     border-radius: 4px;
-    padding: 8px 15px;
     cursor: pointer;
+    font-weight: 600;
 }
 
-/* Modal for mobile view */
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9000;
+.modal-footer .save-button {
+    background-color: #0176d3;
+    color: white;
+    border: 1px solid #0176d3;
 }
 
-.modal-container {
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    background-color: white;
-    border-radius: 4px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+.modal-footer .save-button:hover {
+    background-color: #005fb2;
+    border-color: #005fb2;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #e0e0e0;
+.modal-footer .close-button {
+    background-color: #ffffff;
+    color: #5a3e84;
+    border: 1px solid #d8d8d8;
 }
 
-.modal-header h2 {
-    margin: 0;
-    font-size: 18px;
+.modal-footer .close-button:hover {
+    background-color: #f0f0f0;
 }
 
-.modal-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
+/* Required field indicator */
+.form-element label::after {
+    content: ' *';
+    color: red;
 }
 
-/* Responsive styles */
-@media (max-width: 992px) {
-    .card {
-        flex-direction: column;
-        height: auto;
-    }
-
-    .timeline-panel {
-        width: 100%;
-        max-height: 300px;
-    }
-
-    .area-metrics {
-        display: none;
-    }
-
-    .right-panel {
-        width: 100%;
-    }
+/* Exclude the upload label from the required indicator */
+.form-element.file-upload label::after {
+    content: none;
 }
 
+/* Mobile modal overrides */
 @media (max-width: 768px) {
     .header-controls {
-        flex-wrap: wrap;
-    }
-
-    .area-header {
         flex-wrap: wrap;
     }
 }
@@ -2301,10 +2423,6 @@
     background-color: #f5f5f5;
 }
 
-.filter-menu li:last-child {
-    border-bottom: none;
-}
-
 .filter-menu li.highlight-menu-item {
     background-color: #5a3e84;
     color: white;
@@ -2380,8 +2498,8 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background-color: #f4f6f9;
-    border: 1px solid #d8dde6;
+    background-color: #0176d3;
+    border: 1px solid #0176d3;
     border-radius: 4px;
     padding: 8px 12px;
     cursor: pointer;
@@ -2389,8 +2507,8 @@
 }
 
 .icon-action:hover {
-    background-color: #eef1f6;
-    border-color: #cbd2e1;
+    background-color: #005fb2; /* Darker blue on hover */
+    border-color: #005fb2; /* Darker blue border on hover */
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -2402,6 +2520,7 @@
 .action-label {
     font-size: 13px;
     font-weight: 500;
+    color: white; /* Make text darker for visibility */
 }
 
 /* Media query for smaller screens */
@@ -2423,10 +2542,6 @@
 
 /* Media query for very small screens - icons only */
 @media (max-width: 576px) {
-    .action-label {
-        display: none;
-    }
-
     .action-icon {
         font-size: 22px;
     }
@@ -2434,4 +2549,292 @@
     .icon-action {
         padding: 10px;
     }
+}
+
+.expand-arrow {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.filter-icon,
+.export-icon {
+    fill: #5a3e84;
+    vertical-align: middle;
+}
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+}
+.icon-button:hover {
+    background: #f0f0f0;
+}
+
+.expand-all-button svg {
+    fill: #5a3e84;
+}
+
+.area-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 5px 25px 12px;
+    background: none;
+    border: none;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.area-actions .action-button.icon-action {
+    margin: 0;
+    min-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .area-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+    .area-actions .action-button.icon-action {
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .area-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .area-actions .action-button.icon-action {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+/* Timeline Status Colors */
+.cad-timeline_slidebase.cad-timeline_pending .timeline-content,
+.cad-timeline_slidebase.cad-timeline_inprogress .timeline-content {
+    border-left: 3px solid #3498db;
+}
+
+.cad-timeline_slidebase.cad-timeline_pending .timeline-dot,
+.cad-timeline_slidebase.cad-timeline_inprogress .timeline-dot {
+    border-color: #3498db;
+}
+
+.cad-timeline_slidebase.cad-timeline_default .timeline-content {
+    border-left: 3px solid #95a5a6;
+}
+
+.cad-timeline_slidebase.cad-timeline_default .timeline-dot {
+    border-color: #95a5a6;
+}
+
+.cad-timeline_slidebase.cad-timeline_submited .timeline-content {
+    border-left: 3px solid #2ecc71;
+}
+
+.cad-timeline_slidebase.cad-timeline_submited .timeline-dot {
+    border-color: #2ecc71;
+}
+
+/* Ensure dot centering */
+.timeline-dot {
+    position: absolute;
+    left: -50px; /* Adjusted to center the dot on the line */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 4px solid #0070d2; /* Default border color */
+}
+
+.timeline-line {
+    position: absolute;
+    left: 21px; /* Keep line position consistent */
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #d8d8d8;
+}
+
+/* Add styling for the new create buttons */
+.create-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    background-color: #0176d3; /* Use Salesforce Blue */
+    color: white; /* White text */
+    border: 1px solid #0176d3; /* Match border */
+    transition: all 0.2s ease;
+    margin-top: 15px; /* Space from content above */
+}
+
+.create-button:hover {
+    background-color: #005fb2; /* Darker blue on hover */
+    border-color: #005fb2; /* Darker blue border */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: white; /* Keep text white */
+}
+
+/* Ensure buttons stack on small screens if needed */
+@media (max-width: 576px) {
+    .create-button {
+        width: 100%; /* Full width on small screens */
+        justify-content: center;
+    }
+}
+
+/* Style the send and compose buttons to inherit from create-button */
+.send-button,
+.compose-button {
+    /* These styles are now covered by .create-button */
+    /* background-color: #5a3e84; */
+    /* color: white; */
+    /* border: none; */
+    /* border-radius: 4px; */
+    /* padding: 8px 15px; */
+    /* cursor: pointer; */
+}
+
+.send-button:hover,
+.compose-button:hover {
+    /* These styles are now covered by .create-button:hover */
+    /* background-color: #48326a; */
+}
+
+/* Keyframes for pencil rotation */
+@keyframes rotate-pencil {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(90deg);
+    }
+}
+
+.edit-button {
+    /* Add any specific styles for the edit button here if needed */
+    display: inline-block;
+}
+
+.edit-button svg {
+    transition: stroke 0.3s ease-in-out;
+}
+
+.header-controls .edit-button.editing-active svg {
+    animation: rotate-pencil 0.3s ease-in-out forwards; /* Apply rotation animation */
+}
+
+/* Define reverse animation for returning to original position */
+@keyframes rotate-pencil-reverse {
+    from {
+        transform: rotate(90deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+/* Apply reverse animation when editing is not active */
+.header-controls .edit-button:not(.editing-active) svg {
+    animation: rotate-pencil-reverse 0.3s ease-in-out forwards; /* Apply reverse rotation animation */
+}
+
+.header-controls .edit-button:hover svg {
+    stroke: #0072f5; /* Change color on hover for better feedback */
+}
+
+/* Custom Toast Notification Styles */
+.custom-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 20px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6; /* Default border */
+    color: #495057; /* Default text color */
+    font-weight: 600;
+    z-index: 10000; /* Ensure it's above other elements */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f8f9fa; /* Default light gray background */
+}
+
+.toast-icon {
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.custom-toast-success {
+    background-color: #d4edda !important; /* Light green background */
+    border-color: #c3e6cb !important; /* Green border */
+    color: #155724 !important; /* Dark green text */
+}
+
+.custom-toast-error {
+    background-color: #f8d7da !important; /* Light red background */
+    border-color: #f5c6cb !important; /* Red border */
+    color: #721c24 !important; /* Dark red text */
+}
+
+.toast-content {
+    flex-grow: 1;
+}
+
+.toast-close-button {
+    background: none;
+    border: none;
+    color: inherit; /* Inherit color from parent toast */
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    opacity: 0.7;
+}
+
+.toast-close-button:hover {
+    opacity: 1;
+}
+
+/* Success toast close button */
+.custom-toast-success .toast-close-button {
+    color: #155724; /* Dark green for success */
+}
+
+/* Error toast close button */
+.custom-toast-error .toast-close-button {
+    color: #721c24; /* Dark red for error */
+}
+
+/* Adjust dot colors by status */
+.cad-timeline_pending .timeline-dot,
+.cad-timeline_inprogress .timeline-dot {
+    border-color: #007bff;
+}
+
+.cad-timeline_submited .timeline-dot {
+    border-color: #28a745;
+}
+
+.cad-timeline_default .timeline-dot {
+    border-color: #6c757d;
 }

@@ -1,6 +1,50 @@
 import * as utils from 'c/utils';
 import { isOnline } from 'c/utils';
 
+// Placeholder for your Apex REST API endpoint.
+// IMPORTANT: Replace this with your actual Salesforce Apex REST endpoint URL.
+
+// function buildCountsEndpoint(sectionIds, accountAssRelId, type) {
+//     const baseUrl = 'https://customization-app-1405-dev-ed.scratch.my.salesforce.com/services/apexrest/Rhythm/v1/assessment/';
+//     const params = new URLSearchParams({
+//         operation: 'getCounts',
+//         sectionIds: sectionIds.join(','),
+//         accountAssRelId: accountAssRelId,
+//         type: type
+//     });
+//     return `${baseUrl}?${params.toString()}`;
+// }
+
+// const SECTION_IDS = ['a0cO5000004dKcTIAU', 'a0cO5000004VrgtIAC', 'a0cO5000004dKcXYZ'];
+// const APEX_REST_ENDPOINT_URL = buildCountsEndpoint(
+//     SECTION_IDS,
+//     'a00O500000PNFzGIAX',
+//     'findings'
+// );
+
+const RECORD_ID = 'a00O500000PQepsIAD';
+const TYPES = ['findings', 'responses', 'assessment'];
+// Method 2: Using URLSearchParams (more robust)
+function buildEditPermissionsUrl(recordId, types) {
+    const baseUrl =
+        'https://customization-app-1405-dev-ed.scratch.my.salesforce.com/services/apexrest/Rhythm/lwcossaccounts/';
+    const params = new URLSearchParams({
+        operation: 'getEditPermissions',
+        recordId: recordId,
+        types: types.join(',')
+    });
+
+    console.log('line 37', `${baseUrl}?${params.toString()}`);
+    return `${baseUrl}?${params.toString()}`;
+}
+
+const APEX_REST_ENDPOINT_URL = buildEditPermissionsUrl(RECORD_ID, TYPES);
+
+const APEX_REST_ENDPOINT_URL_2 =
+    'https://customization-app-1405-dev-ed.scratch.my.salesforce.com/services/apexrest/Rhythm/lwcossaccounts/?operation=getQuestions&recordId=a08O500000S12avIAB';
+const APEX_REST_ENDPOINT_URL_3 =
+    'https://customization-app-1405-dev-ed.scratch.my.salesforce.com/services/apexrest/Rhythm/findings/?operation=getFindings&accountAssessmentId=a00O500000PNFzGIAX';
+
 // Mock data for accounts
 const mockAccounts = [
     {
@@ -74,15 +118,125 @@ export function initializeOfflineStorage() {
 // Get all accounts
 export function getAccounts() {
     if (isOnline()) {
-        console.log('🌐 Online: Getting accounts from server');
-        // Online: get from server and update local storage
-        return Promise.resolve([...accounts]).then((result) => {
-            console.log(
-                `💾 Saving ${result.length} accounts to offline storage`
+        console.log('🌐 Online: Getting accounts from Apex REST API');
+        // TODO: Implement a secure way to obtain and manage the Salesforce session ID / access token.
+        // IMPORTANT: Replace 'YOUR_SALESFORCE_SESSION_ID' with an active Session ID from your org for testing.
+        const sessionId =
+            '00DO500000ZIhWy!AQEAQO9Qv7NOZGfUBErKV5OqtS0PAOERPeHfCc0DIOypv3JWrPbEFSYMiJASZic9z8AgtRr.ustdciwySQrAA52EIS_dEtVU'; // <--- REPLACE THIS!
+
+        if (!sessionId || sessionId === 'YOUR_SALESFORCE_SESSION_ID') {
+            console.error(
+                '❌ ERROR: Session ID is not set. Please replace "YOUR_SALESFORCE_SESSION_ID" in accountService.js with a valid session ID.'
             );
-            utils.saveItems(utils.STORE_NAMES.ACCOUNTS, result);
-            return result;
-        });
+            // Optionally, fall back to offline or throw an error to make it obvious.
+            return Promise.reject(
+                new Error(
+                    'Session ID not configured. Cannot fetch from Salesforce.'
+                )
+            );
+        }
+
+        const headers = {
+            Authorization: `Bearer ${sessionId}`,
+            'Content-Type': 'application/json'
+        };
+
+        return fetch(APEX_REST_ENDPOINT_URL, {
+            method: 'GET',
+            mode: 'cors',
+            headers: headers
+        })
+            .then((response) => {
+                console.log(
+                    `🌐 Received response from Apex REST API: ${response}`
+                );
+                if (response.status === 401) {
+                    console.error(
+                        '❌ 401 Unauthorized: The Salesforce session ID is likely invalid or expired. Please obtain a new one and update accountService.js.'
+                    );
+                    throw new Error(
+                        'Unauthorized: Check Salesforce session ID/access token and CORS setup.'
+                    );
+                }
+                if (!response.ok) {
+                    // Try to get more error details from response if possible
+                    return response.text().then((text) => {
+                        console.error(
+                            `❌ HTTP error! status: ${response.status}, message: ${text}`
+                        );
+                        throw new Error(
+                            `HTTP error! status: ${response.status}, message: ${text}`
+                        );
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('✅ Fetched and parsed data:', data);
+
+                if (!data || typeof data !== 'object') {
+                    throw new Error('Parsed data is not an object');
+                }
+
+                // Check if data.data exists and is an array before proceeding
+                if (data.success && Array.isArray(data.data)) {
+                    const fetchedAccounts = data.data;
+                    console.log(
+                        `✅ Successfully fetched ${fetchedAccounts.length} accounts`
+                    );
+
+                    // Update the in-memory store and local storage
+                    console.log(
+                        `💾 Saving ${fetchedAccounts.length} accounts to offline storage`
+                    );
+
+                    // Ensure the fields match what utils.saveItems expects or adapt if necessary
+                    // Assuming fetchedAccounts (data.data) is the array of account records
+                    utils.saveItems(
+                        utils.STORE_NAMES.ACCOUNTS,
+                        fetchedAccounts
+                    );
+                    accounts = [...fetchedAccounts]; // Update the in-memory 'accounts' variable
+                    return fetchedAccounts;
+                } else {
+                    // Log an error if the expected data structure is not found
+                    console.error(
+                        '❌ Invalid response structure for accounts: Expected success and data array',
+                        data
+                    );
+                    // Depending on requirements, you might throw an error, return an empty array, or fallback to offline storage here.
+                    // For now, we will log the error and return an empty array to prevent further issues.
+                    return [];
+                }
+            })
+            .catch((error) => {
+                console.error(
+                    '❌ Error fetching accounts from Apex REST API:',
+                    error.message
+                );
+                console.log(
+                    '📴 Falling back to offline: Getting accounts from local storage due to API error'
+                );
+                return utils
+                    .getAll(utils.STORE_NAMES.ACCOUNTS)
+                    .then((accountsFromStorage) => {
+                        console.log(
+                            `📋 Retrieved ${accountsFromStorage.length} accounts from offline storage (fallback)`
+                        );
+                        if (
+                            accountsFromStorage &&
+                            accountsFromStorage.length > 0
+                        ) {
+                            accounts = [...accountsFromStorage]; // Update in-memory store with fallback data
+                            return accountsFromStorage;
+                        }
+                        // If local storage is also empty or call failed, rethrow the original error or a new one
+                        // This ensures the calling component knows about the failure if no data is available.
+                        throw new Error(
+                            `Failed to fetch from API and no local data available. Original error: ${error.message}`
+                        );
+                    });
+            });
     }
 
     console.log('📴 Offline: Getting accounts from local storage');
@@ -93,6 +247,7 @@ export function getAccounts() {
             console.log(
                 `📋 Retrieved ${accountsFromStorage.length} accounts from offline storage`
             );
+            accounts = [...accountsFromStorage]; // Update in-memory store with offline data
             return accountsFromStorage;
         });
 }
@@ -119,39 +274,115 @@ export function getAccount(id) {
 
 // Create a new account
 export function createAccount(accountData) {
-    const newAccount = {
+    // accountData is expected to be an object like { Name: 'Test Account', Industry: 'Tech' }
+    console.log('🔄 Creating account:', accountData);
+
+    if (isOnline()) {
+        console.log('🌐 Online: Creating account on server', accountData.Name);
+        // Log the detailed accountData object being sent
+        console.log(
+            '📦 Account data being sent to server:',
+            JSON.stringify(accountData, null, 2)
+        );
+
+        // Prepare headers (similar to getAccounts)
+        // IMPORTANT: Ensure sessionId is current and valid
+        const sessionId =
+            '00DO500000ZIhWy!AQEAQDegnwsexgtGOegqUZSFdmj9ZgaBrtaZ7bNf.cTCqfD_UkBSlrvywgE9CI6OgOe5EVSZvItSA92etzzbningrVxCe8nz'; // Keep this updated or use a dynamic way to get it
+        if (!sessionId || sessionId === 'YOUR_SALESFORCE_SESSION_ID') {
+            console.error(
+                '❌ ERROR: Session ID is not set for createAccount. Please ensure it is valid.'
+            );
+            return Promise.reject(
+                new Error(
+                    'Session ID not configured. Cannot create account on Salesforce.'
+                )
+            );
+        }
+        const headers = {
+            Authorization: `Bearer ${sessionId}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        };
+
+        // Send only the necessary data for creation, Salesforce will generate ID, CreatedDate etc.
+        return fetch(APEX_REST_ENDPOINT_URL, {
+            method: 'POST',
+            headers: headers,
+            mode: 'cors',
+            body: JSON.stringify(accountData) // Send the raw accountData for creation
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    console.error(
+                        '❌ 401 Unauthorized: The Salesforce session ID is likely invalid or expired.'
+                    );
+                    throw new Error(
+                        'Unauthorized: Check Salesforce session ID/access token and CORS setup.'
+                    );
+                }
+                if (!response.ok) {
+                    return response.text().then((text) => {
+                        console.error(
+                            `❌ HTTP error! status: ${response.status}, message: ${text}`
+                        );
+                        throw new Error(
+                            `Failed to create account on server: ${response.status} ${text}`
+                        );
+                    });
+                }
+                return response.json();
+            })
+            .then((createdAccountFromSF) => {
+                console.log(
+                    '✅ Account created on server:',
+                    createdAccountFromSF
+                );
+                // Add to in-memory array
+                accounts.push(createdAccountFromSF);
+                // Save the server-confirmed account (with SF ID) to local DB
+                console.log(
+                    '💾 Saving server-created account to offline storage'
+                );
+                return utils
+                    .saveItem(utils.STORE_NAMES.ACCOUNTS, createdAccountFromSF)
+                    .then(() => createdAccountFromSF); // Return the account from SF
+            })
+            .catch((error) => {
+                console.error(
+                    '❌ Error creating account via Apex REST API:',
+                    error.message
+                );
+                // Optionally, here you could decide to queue it for offline creation if the API call fails
+                // For now, just rethrowing the error.
+                throw error;
+            });
+    }
+
+    // Offline: save to local storage and queue for sync
+    console.log(
+        '📴 Offline: Creating account in local storage',
+        accountData.Name
+    );
+    const newAccountOffline = {
         ...accountData,
-        id: generateId(),
+        id: generateId(), // Generate client-side ID for offline record
         createdDate: new Date().toISOString(),
         lastModifiedDate: new Date().toISOString()
     };
 
-    if (isOnline()) {
-        console.log('🌐 Online: Creating account on server', newAccount.name);
-        // Online: create on server and update local storage
-        accounts.push(newAccount);
-        return Promise.resolve({ ...newAccount }).then((result) => {
-            console.log('💾 Saving new account to offline storage');
-            utils.saveItem(utils.STORE_NAMES.ACCOUNTS, result);
-            return result;
-        });
-    }
-
-    console.log(
-        '📴 Offline: Creating account in local storage',
-        newAccount.name
-    );
-    // Offline: save to local storage and queue for sync
     return utils
-        .saveItem(utils.STORE_NAMES.ACCOUNTS, newAccount)
+        .saveItem(utils.STORE_NAMES.ACCOUNTS, newAccountOffline)
         .then((result) => {
             console.log('💾 Account saved to offline storage');
+            // Add to in-memory array
+            accounts.push(result);
             // Add to pending operations queue
             console.log('📝 Adding CREATE operation to pending queue');
             return utils
                 .addPendingOperation({
                     type: 'CREATE_ACCOUNT',
-                    data: result
+                    data: result // The account data that was saved locally
                 })
                 .then(() => {
                     console.log(
@@ -381,3 +612,59 @@ export function syncPendingOperations() {
         );
     });
 }
+
+// Add this function after your existing getAccounts function
+export function getCountsData() {
+    if (isOnline()) {
+        console.log('🌐 Online: Getting counts from Apex REST API');
+        const sessionId =
+            '00DO500000ZIhWy!AQEAQPQ5t61nQsLNA6k.yQRPcJik0RYTr8xStqPsV7mtYZcMKc_hsyOozqkDyDgnbIxvABeF6xW.zRhTNKWlJ2Uinuf67uxO';
+
+        const headers = {
+            Authorization: `Bearer ${sessionId}`,
+            'Content-Type': 'application/json'
+        };
+
+        return fetch(APEX_REST_ENDPOINT_URL_2, {
+            method: 'GET',
+            mode: 'cors',
+            headers: headers
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then((text) => {
+                        console.error(
+                            `❌ HTTP error! status: ${response.status}, message: ${text}`
+                        );
+                        throw new Error(
+                            `HTTP error! status: ${response.status}, message: ${text}`
+                        );
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                //  console.log('✅ Fetched Counts Data:', data);
+                // If you want to see the specific parts of the response:
+                if (data.success) {
+                    // console.log('Count Results:', data.data);
+                    // console.log('Message:', data.message);
+                }
+                return data;
+            })
+            .catch((error) => {
+                console.error('❌ Error fetching counts:', error.message);
+                throw error;
+            });
+    }
+    return Promise.reject(new Error('Not online'));
+}
+
+// Call this function where you need it
+getCountsData()
+    .then((data) => {
+        console.log('Successfully retrieved counts:', JSON.parse(data));
+    })
+    .catch((error) => {
+        console.error('Error getting counts:', error);
+    });

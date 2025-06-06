@@ -1,10 +1,11 @@
 <template>
     <div class="main-container">
-        <!-- Tab Navigation -->
+        <!-- Tab Navigation
         <div class="tab-container">
-            <div class="tab active">Responses</div>
-            <div class="tab" onclick={handleTabSwitch}>Reports</div>
+            <button type="button" class={activeTab === 'responses' ? 'tab active' : 'tab'} aria-selected={activeTab === 'responses'} data-tab="responses" onclick={handleTabSwitch}>Responses</button>
+            <button type="button" class={activeTab === 'reports' ? 'tab active' : 'tab'} aria-selected={activeTab === 'reports'} data-tab="reports" onclick={handleTabSwitch}>Reports</button>
         </div>
+    -->
 
         <div class="assessment-container">
             <template if:true={viewResponse}>
@@ -12,37 +13,166 @@
                     <!-- Timeline Panel -->
                     <div class={timelinePanelClass}>
                         <div class="panel-header timeline-header">
-                            <button
-                                class="icon-button"
-                                onclick={handleLeftButtonClick}
-                                title="Toggle Timeline Panel"
-                            >
-                                <span class="icon icon-chevron-right"></span>
-                            </button>
+                            <template if:true={isTimelinePanelVisible}>
+                                <button
+                                    class="icon-button"
+                                    onclick={handleLeftButtonClick}
+                                    title="Close Timeline Panel"
+                                >
+                                    <!-- Chevron Left SVG -->
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M15 6l-6 6 6 6"
+                                            stroke="#5a3e84"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                </button>
+                            </template>
                             <span><b>{labels.timeLine}</b></span>
                         </div>
                         <div class="timeline-container">
-                            <div class="timeline-line"></div>
                             <div class="timeline-scroll">
                                 <template
                                     for:each={assessmentTimeline}
                                     for:item="assessment"
                                 >
                                     <div
-                                        key={assessment.status}
+                                        key={assessment.id}
                                         class={assessment.classlist}
                                     >
-                                        <div class="timeline-dot"></div>
-                                        <div class="timeline-date">
-                                            {assessment.date}
+                                        <div class="timeline-date-wrapper">
+                                            <span class="timeline-day"
+                                                >{assessment.day}</span
+                                            >
+                                            <span class="timeline-date"
+                                                >{assessment.date}</span
+                                            >
+                                        </div>
+                                        <div class="timeline-dot-container">
+                                            <div class="timeline-dot">
+                                                <!-- In Review Icon -->
+                                                <template
+                                                    if:true={assessment.isInReview}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="10"
+                                                        height="10"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="10"
+                                                        ></circle>
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="4"
+                                                        ></circle>
+                                                    </svg>
+                                                </template>
+                                                <!-- Submitted/Completed Icon -->
+                                                <template
+                                                    if:true={assessment.isSubmitted}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="10"
+                                                        height="10"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <polyline
+                                                            points="20 6 9 17 4 12"
+                                                        ></polyline>
+                                                    </svg>
+                                                </template>
+                                                <!-- In Progress Icon -->
+                                                <template
+                                                    if:true={assessment.isInProgress}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="10"
+                                                        height="10"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="10"
+                                                        ></circle>
+                                                        <line
+                                                            x1="12"
+                                                            y1="8"
+                                                            x2="12"
+                                                            y2="12"
+                                                        ></line>
+                                                        <line
+                                                            x1="12"
+                                                            y1="16"
+                                                            x2="12.01"
+                                                            y2="16"
+                                                        ></line>
+                                                    </svg>
+                                                </template>
+                                                <!-- Start Date Icon -->
+                                                <template
+                                                    if:true={assessment.isStartDate}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="10"
+                                                        height="10"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2.5"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="3"
+                                                        ></circle>
+                                                        <path
+                                                            d="M12 1v6m0 6v6m11-7h-6m-6 0H1"
+                                                        ></path>
+                                                    </svg>
+                                                </template>
+                                            </div>
                                         </div>
                                         <div class="timeline-content">
-                                            <h2 class="timeline-title">
+                                            <h3 class="timeline-title">
                                                 {assessment.status}
-                                            </h2>
-                                            <span class="timeline-name"
-                                                >- {assessment.name}</span
-                                            >
+                                            </h3>
+                                            <p class="timeline-user">
+                                                {assessment.name}
+                                            </p>
                                         </div>
                                     </div>
                                 </template>
@@ -53,48 +183,106 @@
                     <!-- Main Content -->
                     <div class="main-panel">
                         <div class="panel-header">
-                            <div class="header-left">
+                            <template if:false={isTimelinePanelVisible}>
                                 <button
                                     class="icon-button toggle-timeline"
                                     onclick={handleLeftButtonClick}
-                                    title="Toggle Timeline Panel"
+                                    title="Open Timeline Panel"
                                 >
-                                    <span class="icon icon-chevron-left"></span>
-                                </button>
-                                <p>
-                                    <b
-                                        >{labels.details} :
-                                        {assessmentData.assessmentName}
-                                        {assessmentData.endDate}</b
+                                    <!-- Chevron Right SVG -->
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
                                     >
-                                </p>
-                            </div>
+                                        <path
+                                            d="M9 6l6 6-6 6"
+                                            stroke="#5a3e84"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                </button>
+                            </template>
+                            <p>
+                                <b
+                                    >{labels.details} :
+                                    {assessmentData.assessmentName}
+                                    {assessmentData.endDate}</b
+                                >
+                            </p>
 
                             <!-- Control buttons -->
                             <div class="header-controls">
-                                <!-- Expand/Collapse button -->
+                                <!-- Edit button -->
+                                <button
+                                    class="icon-button edit-button { isEditing: 'editing-active' }"
+                                    onclick={toggleEditMode}
+                                    title="Edit"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
+                                            stroke="#5a3e84"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <!-- Expand/Collapse All button -->
                                 <template if:true={showExpand}>
                                     <button
-                                        class="icon-button"
+                                        class="icon-button expand-all-button"
                                         onclick={handleAccordian}
                                         title="Expand All"
-                                        data-id="[ + ]"
                                     >
-                                        <span
-                                            class="icon icon-plus-square"
-                                        ></span>
+                                        <svg
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M12 5v14m-7-7h14"
+                                                stroke="#5a3e84"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
                                     </button>
                                 </template>
                                 <template if:false={showExpand}>
                                     <button
-                                        class="icon-button"
+                                        class="icon-button expand-all-button"
                                         onclick={handleAccordian}
                                         title="Collapse All"
-                                        data-id="[ - ]"
                                     >
-                                        <span
-                                            class="icon icon-minus-square"
-                                        ></span>
+                                        <svg
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M5 12h14"
+                                                stroke="#5a3e84"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            />
+                                        </svg>
                                     </button>
                                 </template>
 
@@ -174,13 +362,26 @@
                                 <template if:true={showdownloadIcon}>
                                     <div class="dropdown-wrapper">
                                         <button
-                                            class="icon-button"
+                                            class="icon-button export-button"
                                             onclick={toggleExportMenu}
                                             title="Export"
                                         >
-                                            <span
-                                                class="icon icon-download"
-                                            ></span>
+                                            <svg
+                                                class="export-icon"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="20"
+                                                height="20"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"
+                                                    stroke="#5a3e84"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
                                         </button>
                                         <ul class={exportMenuClass}>
                                             <li
@@ -206,9 +407,20 @@
                                     onclick={handleRightButtonClick}
                                     title="Toggle Right Panel"
                                 >
-                                    <span
-                                        class="icon icon-chevron-right"
-                                    ></span>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M9 6l6 6-6 6"
+                                            stroke="#5a3e84"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
                                 </button>
                             </div>
                         </div>
@@ -227,14 +439,38 @@
                                     >
                                         <div class="area-icon">
                                             <template if:true={area.expanded}>
-                                                <span
-                                                    class="icon icon-angle-down"
-                                                ></span>
+                                                <!-- Down Arrow SVG -->
+                                                <svg
+                                                    width="20"
+                                                    height="20"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                >
+                                                    <path
+                                                        d="M6 9l6 6 6-6"
+                                                        stroke="#5a3e84"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
                                             </template>
                                             <template if:false={area.expanded}>
-                                                <span
-                                                    class="icon icon-angle-right"
-                                                ></span>
+                                                <!-- Right Arrow SVG -->
+                                                <svg
+                                                    width="20"
+                                                    height="20"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                >
+                                                    <path
+                                                        d="M9 6l6 6-6 6"
+                                                        stroke="#5a3e84"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg>
                                             </template>
                                         </div>
                                         <div
@@ -246,50 +482,50 @@
                                         <div class="area-metrics">
                                             <div class="area-metric">
                                                 <span class="metric-label"
-                                                    >Total Count</span
+                                                    >{labels.totalCount}</span
                                                 >
                                                 <span class="metric-value"
-                                                    >{area.metrics.totalCount}</span
+                                                    >{area.computedMetrics.totalCount}</span
                                                 >
                                             </div>
                                             <div class="area-metric">
                                                 <span class="metric-label"
-                                                    >%Completed</span
+                                                    >{labels.completed}</span
                                                 >
                                                 <span class="metric-value"
-                                                    >{area.metrics.completed}</span
+                                                    >{area.computedMetrics.completed}</span
                                                 >
                                             </div>
                                             <div class="area-metric">
                                                 <span class="metric-label"
-                                                    >Score</span
+                                                    >{labels.score}</span
                                                 >
                                                 <span class="metric-value"
-                                                    >{area.metrics.score}</span
+                                                    >{area.computedMetrics.score}</span
                                                 >
                                             </div>
                                             <div class="area-metric">
                                                 <span class="metric-label"
-                                                    >Follow-Ups</span
+                                                    >{labels.followUps}</span
                                                 >
                                                 <span class="metric-value"
-                                                    >{area.metrics.followUps}</span
+                                                    >{area.computedMetrics.followUps}</span
                                                 >
                                             </div>
                                             <div class="area-metric">
                                                 <span class="metric-label"
-                                                    >Findings</span
+                                                    >{labels.findings}</span
                                                 >
                                                 <span class="metric-value"
-                                                    >{area.metrics.findings}</span
+                                                    >{area.computedMetrics.findings}</span
                                                 >
                                             </div>
                                             <div class="area-metric">
                                                 <span class="metric-label"
-                                                    >Tasks</span
+                                                    >{labels.tasks}</span
                                                 >
                                                 <span class="metric-value"
-                                                    >{area.metrics.tasks}</span
+                                                    >{area.computedMetrics.tasks}</span
                                                 >
                                             </div>
                                         </div>
@@ -299,78 +535,168 @@
                                     <template if:true={area.expanded}>
                                         <div class="area-details">
                                             <div class="area-content">
-                                                <p>
-                                                    This is the detailed content
-                                                    for {area.title}.
-                                                </p>
-
-                                                <!-- Action buttons for each area -->
-                                                <div class="area-actions">
-                                                    <button
-                                                        class="action-button icon-action"
-                                                        onclick={showComments}
+                                                <p>{area.displayQuestion}</p>
+                                                <div class="response-input">
+                                                    <textarea
+                                                        placeholder="Enter your response here..."
                                                         data-area-id={area.id}
-                                                        title="Comments"
-                                                    >
-                                                        <span
-                                                            class="action-icon"
-                                                            >&#128172;</span
-                                                        >
-                                                        <!-- Speech bubble icon -->
-                                                        <span
-                                                            class="action-label"
-                                                            >Comments</span
-                                                        >
-                                                    </button>
-                                                    <button
-                                                        class="action-button icon-action"
-                                                        onclick={showFindings}
-                                                        data-area-id={area.id}
-                                                        title="Findings"
-                                                    >
-                                                        <span
-                                                            class="action-icon"
-                                                            >&#128269;</span
-                                                        >
-                                                        <!-- Magnifying glass icon -->
-                                                        <span
-                                                            class="action-label"
-                                                            >Findings</span
-                                                        >
-                                                    </button>
-                                                    <button
-                                                        class="action-button icon-action"
-                                                        onclick={showFiles}
-                                                        data-area-id={area.id}
-                                                        title="Files"
-                                                    >
-                                                        <span
-                                                            class="action-icon"
-                                                            >&#128193;</span
-                                                        >
-                                                        <!-- Folder icon -->
-                                                        <span
-                                                            class="action-label"
-                                                            >Files</span
-                                                        >
-                                                    </button>
-                                                    <button
-                                                        class="action-button icon-action"
-                                                        onclick={showEmails}
-                                                        data-area-id={area.id}
-                                                        title="Emails"
-                                                    >
-                                                        <span
-                                                            class="action-icon"
-                                                            >&#9993;</span
-                                                        >
-                                                        <!-- Envelope icon -->
-                                                        <span
-                                                            class="action-label"
-                                                            >Emails</span
-                                                        >
-                                                    </button>
+                                                        onchange={handleResponseChange}
+                                                        value={area.response}
+                                                        disabled={isNotEditing}
+                                                    ></textarea>
                                                 </div>
+                                                <div class="response-status">
+                                                    <template
+                                                        if:true={area.responseSaved}
+                                                    >
+                                                        <span class="saved"
+                                                            >✓ Response
+                                                            saved</span
+                                                        >
+                                                    </template>
+                                                    <template
+                                                        if:true={area.responseError}
+                                                    >
+                                                        <span class="error"
+                                                            >⚠ Error saving
+                                                            response</span
+                                                        >
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <!-- Action buttons for each area -->
+                                            <div class="area-actions">
+                                                <button
+                                                    class="action-button icon-action"
+                                                    onclick={showComments}
+                                                    data-area-id={area.id}
+                                                    title="Comments"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                                                        ></path>
+                                                    </svg>
+                                                    <span class="action-label"
+                                                        >Comments</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    class="action-button icon-action"
+                                                    onclick={showFindings}
+                                                    data-area-id={area.id}
+                                                    title="Findings"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="11"
+                                                            cy="11"
+                                                            r="8"
+                                                        ></circle>
+                                                        <line
+                                                            x1="21"
+                                                            y1="21"
+                                                            x2="16.65"
+                                                            y2="16.65"
+                                                        ></line>
+                                                    </svg>
+                                                    <span class="action-label"
+                                                        >Findings</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    class="action-button icon-action"
+                                                    onclick={showTasks}
+                                                    data-area-id={area.id}
+                                                    title="Tasks"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                                                        ></path>
+                                                        <rect
+                                                            x="8"
+                                                            y="2"
+                                                            width="8"
+                                                            height="4"
+                                                            rx="1"
+                                                            ry="1"
+                                                        ></rect>
+                                                        <line
+                                                            x1="12"
+                                                            y1="11"
+                                                            x2="12"
+                                                            y2="17"
+                                                        ></line>
+                                                        <line
+                                                            x1="9"
+                                                            y1="14"
+                                                            x2="15"
+                                                            y2="14"
+                                                        ></line>
+                                                    </svg>
+                                                    <span class="action-label"
+                                                        >Tasks</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    class="action-button icon-action"
+                                                    onclick={showEmails}
+                                                    data-area-id={area.id}
+                                                    title="Emails"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <path
+                                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                                        ></path>
+                                                        <polyline
+                                                            points="22,6 12,13 2,6"
+                                                        ></polyline>
+                                                    </svg>
+                                                    <span class="action-label"
+                                                        >Emails</span
+                                                    >
+                                                </button>
                                             </div>
                                         </div>
                                     </template>
@@ -378,26 +704,37 @@
                             </template>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="action-buttons">
+                        <!-- Action Buttons Container -->
+                        <div class="action-buttons-container">
                             <button
-                                class="action-button save-button"
+                                class="action-button save-button main-action-button"
                                 onclick={handleSaveAction}
                             >
-                                <span class="action-icon save-icon"
-                                    >&#128190;</span
+                                <svg
+                                    class="action-icon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                 >
-                                <!-- Save icon -->
+                                    <path
+                                        d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+                                    ></path>
+                                </svg>
                                 <span>Save</span>
                             </button>
                             <button
-                                class="action-button review-button"
+                                class="action-button review-button main-action-button"
                                 onclick={handleCloseReviewAction}
                             >
                                 <span class="action-icon review-icon"
                                     >&#10004;</span
                                 >
-                                <!-- Check mark icon -->
                                 <span>Close Review</span>
                             </button>
                         </div>
@@ -413,13 +750,25 @@
                                     onclick={handleRightButtonClick}
                                     title="Close Panel"
                                 >
-                                    <span class="icon icon-chevron-left"></span>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M9 6l6 6-6 6"
+                                            stroke="#5a3e84"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
                                 </button>
                             </div>
                             <div class="panel-content">
                                 <template if:true={openReviewComments}>
                                     <div class="comments-section">
-                                        <h3>Comments</h3>
                                         <div class="comment">
                                             <div class="comment-header">
                                                 <span class="comment-author"
@@ -457,7 +806,9 @@
                                             <textarea
                                                 placeholder="Add a comment..."
                                             ></textarea>
-                                            <button class="send-button">
+                                            <button
+                                                class="send-button create-button"
+                                            >
                                                 Send
                                             </button>
                                         </div>
@@ -466,7 +817,6 @@
 
                                 <template if:true={showCapaForm}>
                                     <div class="findings-section">
-                                        <h3>Findings</h3>
                                         <div class="finding">
                                             <h4>
                                                 Finding #1: Technical Debt
@@ -495,49 +845,50 @@
                                                 <span>Status: In Progress</span>
                                             </div>
                                         </div>
+                                        <button
+                                            class="create-button"
+                                            onclick={handleCreateFinding}
+                                        >
+                                            Create New Finding
+                                        </button>
                                     </div>
                                 </template>
 
-                                <template if:true={openRightFile}>
-                                    <div class="files-section">
-                                        <h3>Files</h3>
-                                        <div class="file-list">
-                                            <div class="file-item">
-                                                <span
-                                                    class="icon icon-file-pdf"
-                                                ></span>
-                                                <span
-                                                    >TechDebtAnalysis.pdf</span
-                                                >
+                                <template if:true={showTasksSection}>
+                                    <div class="tasks-section">
+                                        <template
+                                            for:each={assessmentTasks}
+                                            for:item="task"
+                                        >
+                                            <div
+                                                key={task.id}
+                                                class="task-item"
+                                            >
+                                                <div class="task-subject">
+                                                    <b>Task Subject:</b>
+                                                    {task.subject}
+                                                </div>
+                                                <div class="task-comments">
+                                                    <b>Comments:</b>
+                                                    {task.comments}
+                                                </div>
+                                                <div class="task-dueDate">
+                                                    <b>Due Date:</b>
+                                                    {task.dueDate}
+                                                </div>
                                             </div>
-                                            <div class="file-item">
-                                                <span
-                                                    class="icon icon-file-excel"
-                                                ></span>
-                                                <span
-                                                    >SystemInventory.xlsx</span
-                                                >
-                                            </div>
-                                            <div class="file-item">
-                                                <span
-                                                    class="icon icon-file-word"
-                                                ></span>
-                                                <span
-                                                    >ModernizationPlan.docx</span
-                                                >
-                                            </div>
-                                        </div>
-                                        <div class="file-upload">
-                                            <button class="upload-button">
-                                                Upload New File
-                                            </button>
-                                        </div>
+                                        </template>
+                                        <button
+                                            class="create-button"
+                                            onclick={handleCreateTask}
+                                        >
+                                            Create New Task
+                                        </button>
                                     </div>
                                 </template>
 
                                 <template if:true={openEmail}>
                                     <div class="emails-section">
-                                        <h3>Emails</h3>
                                         <div class="email-list">
                                             <div class="email-item">
                                                 <div class="email-header">
@@ -583,7 +934,9 @@
                                             </div>
                                         </div>
                                         <div class="email-compose">
-                                            <button class="compose-button">
+                                            <button
+                                                class="compose-button create-button"
+                                            >
                                                 Compose New Email
                                             </button>
                                         </div>
@@ -605,14 +958,25 @@
                         <div class="modal-header">
                             <h2>{displayHeader}</h2>
                             <button class="icon-button" onclick={closeModal}>
-                                <span class="icon icon-times"></span>
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M9 6l6 6-6 6"
+                                        stroke="#5a3e84"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
                             </button>
                         </div>
                         <div class="modal-content">
-                            <!-- Same content as right panel, repeated for modal -->
                             <template if:true={openReviewComments}>
                                 <div class="comments-section">
-                                    <h3>Comments</h3>
                                     <div class="comment">
                                         <div class="comment-header">
                                             <span class="comment-author"
@@ -650,7 +1014,9 @@
                                         <textarea
                                             placeholder="Add a comment..."
                                         ></textarea>
-                                        <button class="send-button">
+                                        <button
+                                            class="send-button create-button"
+                                        >
                                             Send
                                         </button>
                                     </div>
@@ -659,7 +1025,6 @@
 
                             <template if:true={showCapaForm}>
                                 <div class="findings-section">
-                                    <h3>Findings</h3>
                                     <div class="finding">
                                         <h4>
                                             Finding #1: Technical Debt
@@ -686,43 +1051,45 @@
                                             <span>Status: In Progress</span>
                                         </div>
                                     </div>
+                                    <button
+                                        class="create-button"
+                                        onclick={handleCreateFinding}
+                                    >
+                                        Create New Finding
+                                    </button>
                                 </div>
                             </template>
 
-                            <template if:true={openRightFile}>
-                                <div class="files-section">
-                                    <h3>Files</h3>
-                                    <div class="file-list">
-                                        <div class="file-item">
-                                            <span
-                                                class="icon icon-file-pdf"
-                                            ></span>
-                                            <span>TechDebtAnalysis.pdf</span>
+                            <template if:true={showTasksSection}>
+                                <div class="tasks-section">
+                                    <template
+                                        for:each={assessmentTasks}
+                                        for:item="task"
+                                    >
+                                        <div key={task.id} class="task-item">
+                                            <div class="task-subject">
+                                                <b>Task Subject:</b>
+                                                {task.subject}
+                                            </div>
+                                            <div class="task-comments">
+                                                <b>Comments:</b> {task.comments}
+                                            </div>
+                                            <div class="task-dueDate">
+                                                <b>Due Date:</b> {task.dueDate}
+                                            </div>
                                         </div>
-                                        <div class="file-item">
-                                            <span
-                                                class="icon icon-file-excel"
-                                            ></span>
-                                            <span>SystemInventory.xlsx</span>
-                                        </div>
-                                        <div class="file-item">
-                                            <span
-                                                class="icon icon-file-word"
-                                            ></span>
-                                            <span>ModernizationPlan.docx</span>
-                                        </div>
-                                    </div>
-                                    <div class="file-upload">
-                                        <button class="upload-button">
-                                            Upload New File
-                                        </button>
-                                    </div>
+                                    </template>
+                                    <button
+                                        class="create-button"
+                                        onclick={handleCreateTask}
+                                    >
+                                        Create New Task
+                                    </button>
                                 </div>
                             </template>
 
                             <template if:true={openEmail}>
                                 <div class="emails-section">
-                                    <h3>Emails</h3>
                                     <div class="email-list">
                                         <div class="email-item">
                                             <div class="email-header">
@@ -766,12 +1133,424 @@
                                         </div>
                                     </div>
                                     <div class="email-compose">
-                                        <button class="compose-button">
+                                        <button
+                                            class="compose-button create-button"
+                                        >
                                             Compose New Email
                                         </button>
                                     </div>
                                 </div>
                             </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Custom Toast Notification -->
+            <template if:true={isCustomToastVisible}>
+                <div class={toastClasses}>
+                    <template if:true={isSuccessToast}>
+                        <svg
+                            class="toast-icon"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#28a745"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </template>
+                    <template if:true={isErrorToast}>
+                        <svg
+                            class="toast-icon"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#dc3545"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </template>
+                    <div class="toast-content">{customToastMessage}</div>
+                    <button
+                        class="toast-close-button"
+                        onclick={closeCustomToast}
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </template>
+
+            <!-- New Finding Modal -->
+            <template if:true={isFindingModalOpen}>
+                <div class="modal-backdrop">
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <h2>Create New Finding</h2>
+                            <button
+                                class="icon-button"
+                                onclick={handleCloseFindingModal}
+                                title="Close"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M18 6L6 18M6 6l12 12"
+                                        stroke="#5a3e84"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-content">
+                            <div class="form-element">
+                                <label for="finding-name"
+                                    >Assessment Findings Name</label
+                                >
+                                <input
+                                    type="text"
+                                    id="finding-name"
+                                    value={findingName}
+                                    onchange={handleInputChange}
+                                    data-field="findingName"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-element">
+                                <label for="finding-type">Finding Type</label>
+                                <select
+                                    id="finding-type"
+                                    value={findingType}
+                                    onchange={handleInputChange}
+                                    data-field="findingType"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="Major Non-Conformance">
+                                        Major Non-Conformance
+                                    </option>
+                                    <option value="Minor Non-Conformance">
+                                        Minor Non-Conformance
+                                    </option>
+                                    <option value="Observation">
+                                        Observation
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="finding-description"
+                                    >Finding Description</label
+                                >
+                                <textarea
+                                    id="finding-description"
+                                    value={findingDescription}
+                                    onchange={handleInputChange}
+                                    data-field="findingDescription"
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="root-cause">Root Cause</label>
+                                <select
+                                    id="root-cause"
+                                    value={rootCause}
+                                    onchange={handleInputChange}
+                                    data-field="rootCause"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="Lack of workers">
+                                        Lack of workers
+                                    </option>
+                                    <option value="Equipment failure">
+                                        Equipment failure
+                                    </option>
+                                    <option value="Process issue">
+                                        Process issue
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="repeat-finding"
+                                    >Repeat Finding</label
+                                >
+                                <select
+                                    id="repeat-finding"
+                                    value={repeatFinding}
+                                    onchange={handleInputChange}
+                                    data-field="repeatFinding"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="resolution-time"
+                                    >Resolution Time Frame</label
+                                >
+                                <select
+                                    id="resolution-time"
+                                    value={resolutionTimeFrame}
+                                    onchange={handleInputChange}
+                                    data-field="resolutionTimeFrame"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="7 days">7 days</option>
+                                    <option value="15 days">15 days</option>
+                                    <option value="30 days">30 days</option>
+                                    <option value="60 days">60 days</option>
+                                </select>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="assessment-area"
+                                    >Assessment Area</label
+                                >
+                                <input
+                                    type="text"
+                                    id="assessment-area"
+                                    value={assessmentArea}
+                                    onchange={handleInputChange}
+                                    data-field="assessmentArea"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-element">
+                                <label for="status">Status</label>
+                                <select
+                                    id="status"
+                                    value={status}
+                                    onchange={handleInputChange}
+                                    data-field="status"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="Open">Open</option>
+                                    <option value="In Progress">
+                                        In Progress
+                                    </option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-element file-upload">
+                                <label>Upload</label>
+                                <div class="upload-area">
+                                    <input
+                                        type="file"
+                                        class="file-input"
+                                        onchange={handleFileUpload}
+                                        multiple
+                                        hidden
+                                    />
+                                    <button
+                                        class="upload-button"
+                                        onclick={handleUploadButtonClick}
+                                    >
+                                        Upload Files
+                                    </button>
+                                    <span>Or drop files</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                class="action-button close-button"
+                                onclick={handleCloseFindingModal}
+                            >
+                                Close
+                            </button>
+                            <button
+                                class="action-button save-button"
+                                onclick={handleSaveFinding}
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Create New Task Modal -->
+            <template if:true={isTaskModalOpen}>
+                <div class="modal-backdrop">
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <h2>Task Details</h2>
+                            <button
+                                class="icon-button"
+                                onclick={handleCloseTaskModal}
+                                title="Close"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <path
+                                        d="M18 6L6 18M6 6l12 12"
+                                        stroke="#5a3e84"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-content">
+                            <div class="form-element">
+                                <label for="task-subject">Subject</label>
+                                <input
+                                    type="text"
+                                    id="task-subject"
+                                    value={taskSubject}
+                                    onchange={handleTaskInputChange}
+                                    data-field="taskSubject"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-element">
+                                <label for="task-comments">Comments</label>
+                                <textarea
+                                    id="task-comments"
+                                    value={taskComments}
+                                    onchange={handleTaskInputChange}
+                                    data-field="taskComments"
+                                ></textarea>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="task-due-date">Due Date</label>
+                                <input
+                                    type="date"
+                                    id="task-due-date"
+                                    value={taskDueDate}
+                                    onchange={handleTaskInputChange}
+                                    data-field="taskDueDate"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-element">
+                                <label for="task-priority">Priority</label>
+                                <select
+                                    id="task-priority"
+                                    value={taskPriority}
+                                    onchange={handleTaskInputChange}
+                                    data-field="taskPriority"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="task-status">Status</label>
+                                <select
+                                    id="task-status"
+                                    value={taskStatus}
+                                    onchange={handleTaskInputChange}
+                                    data-field="taskStatus"
+                                    required
+                                >
+                                    <option value="">-- Select --</option>
+                                    <option value="Open">Open</option>
+                                    <option value="In Progress">
+                                        In Progress
+                                    </option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-element">
+                                <label for="task-assigned-to"
+                                    >Assigned To</label
+                                >
+                                <input
+                                    type="text"
+                                    id="task-assigned-to"
+                                    value={taskAssignedTo}
+                                    onchange={handleTaskInputChange}
+                                    data-field="taskAssignedTo"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-element file-upload">
+                                <label>Upload</label>
+                                <div class="upload-area">
+                                    <input
+                                        type="file"
+                                        class="task-file-input"
+                                        onchange={handleTaskFileUpload}
+                                        multiple
+                                        hidden
+                                    />
+                                    <button
+                                        class="upload-button"
+                                        onclick={handleTaskUploadButtonClick}
+                                    >
+                                        Upload Files
+                                    </button>
+                                    <span>Or drop files</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                class="action-button close-button"
+                                onclick={handleCloseTaskModal}
+                            >
+                                Close
+                            </button>
+                            <button
+                                class="action-button save-button"
+                                onclick={handleSaveTask}
+                            >
+                                Save
+                            </button>
                         </div>
                     </div>
                 </div>
