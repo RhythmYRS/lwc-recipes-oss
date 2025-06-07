@@ -208,15 +208,10 @@
                                 </button>
                             </template>
                             <div class="assessment-header-info">
-                                <p>
-                                    <b
-                                        >Status:
-                                        {assessmentData.accountAssessmentStatus}</b
-                                    >
-                                </p>
                                 <p class="assessment-name">
                                     <b
-                                        >{assessmentData.assessmentName}
+                                        >Details:
+                                        {assessmentData.assessmentName}
                                         {assessmentData.endDate}</b
                                     >
                                 </p>
@@ -601,9 +596,9 @@
                                                 </button>
                                                 <button
                                                     class="action-button icon-action"
-                                                    onclick={showFindings}
+                                                    onclick={showFindingsAndTasks}
                                                     data-area-id={area.id}
-                                                    title="Findings"
+                                                    title="Findings and Tasks"
                                                 >
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -629,52 +624,7 @@
                                                         ></line>
                                                     </svg>
                                                     <span class="action-label"
-                                                        >Findings</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    class="action-button icon-action"
-                                                    onclick={showTasks}
-                                                    data-area-id={area.id}
-                                                    title="Tasks"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="20"
-                                                        height="20"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                    >
-                                                        <path
-                                                            d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                                                        ></path>
-                                                        <rect
-                                                            x="8"
-                                                            y="2"
-                                                            width="8"
-                                                            height="4"
-                                                            rx="1"
-                                                            ry="1"
-                                                        ></rect>
-                                                        <line
-                                                            x1="12"
-                                                            y1="11"
-                                                            x2="12"
-                                                            y2="17"
-                                                        ></line>
-                                                        <line
-                                                            x1="9"
-                                                            y1="14"
-                                                            x2="15"
-                                                            y2="14"
-                                                        ></line>
-                                                    </svg>
-                                                    <span class="action-label"
-                                                        >Tasks</span
+                                                        >Findings & Tasks</span
                                                     >
                                                 </button>
                                                 <button
@@ -1059,12 +1009,110 @@
                                             <span>Status: In Progress</span>
                                         </div>
                                     </div>
-                                    <button
-                                        class="create-button"
-                                        onclick={handleCreateFinding}
+
+                                    <!-- Only show Create Finding button if no finding exists for this area -->
+                                    <template
+                                        if:false={hasCreatedFindingForCurrentArea}
                                     >
-                                        Create New Finding
-                                    </button>
+                                        <button
+                                            class="create-button"
+                                            onclick={handleCreateFinding}
+                                        >
+                                            Create New Finding
+                                        </button>
+                                    </template>
+
+                                    <!-- Show Tasks section conditionally only after finding is created -->
+                                    <template
+                                        if:true={hasCreatedFindingForCurrentArea}
+                                    >
+                                        <div
+                                            style="
+                                                margin-top: 10px;
+                                                padding: 10px;
+                                                background-color: #f0f7ff;
+                                                border-radius: 5px;
+                                                border-left: 3px solid #28a745;
+                                            "
+                                        >
+                                            <p
+                                                style="
+                                                    margin: 0;
+                                                    color: #155724;
+                                                "
+                                            >
+                                                ✓ Finding created successfully
+                                                for this assessment area.
+                                            </p>
+                                        </div>
+
+                                        <div
+                                            class="tasks-section"
+                                            style="margin-top: 20px"
+                                        >
+                                            <template
+                                                for:each={assessmentTasks}
+                                                for:item="task"
+                                            >
+                                                <div
+                                                    key={task.id}
+                                                    class="task-item"
+                                                >
+                                                    <div class="task-subject">
+                                                        <b>Task Subject:</b>
+                                                        {task.subject}
+                                                    </div>
+                                                    <div class="task-comments">
+                                                        <b>Comments:</b>
+                                                        {task.comments}
+                                                    </div>
+                                                    <div class="task-dueDate">
+                                                        <b>Due Date:</b>
+                                                        {task.dueDate}
+                                                    </div>
+                                                </div>
+                                            </template>
+
+                                            <!-- Only show Create Task button if no task exists for this area -->
+                                            <template
+                                                if:false={hasCreatedTaskForCurrentArea}
+                                            >
+                                                <button
+                                                    class="create-button"
+                                                    onclick={handleCreateTask}
+                                                >
+                                                    Create New Task
+                                                </button>
+                                            </template>
+
+                                            <!-- Show confirmation if task is created -->
+                                            <template
+                                                if:true={hasCreatedTaskForCurrentArea}
+                                            >
+                                                <div
+                                                    style="
+                                                        margin-top: 10px;
+                                                        padding: 10px;
+                                                        background-color: #f0f7ff;
+                                                        border-radius: 5px;
+                                                        border-left: 3px solid
+                                                            #28a745;
+                                                    "
+                                                >
+                                                    <p
+                                                        style="
+                                                            margin: 0;
+                                                            color: #155724;
+                                                        "
+                                                    >
+                                                        ✓ Task created
+                                                        successfully for this
+                                                        assessment area.
+                                                    </p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
 
@@ -1087,12 +1135,43 @@
                                             </div>
                                         </div>
                                     </template>
-                                    <button
-                                        class="create-button"
-                                        onclick={handleCreateTask}
+
+                                    <!-- Only show Create Task button if no task exists for this area -->
+                                    <template
+                                        if:false={hasCreatedTaskForCurrentArea}
                                     >
-                                        Create New Task
-                                    </button>
+                                        <button
+                                            class="create-button"
+                                            onclick={handleCreateTask}
+                                        >
+                                            Create New Task
+                                        </button>
+                                    </template>
+
+                                    <!-- Show confirmation if task is created -->
+                                    <template
+                                        if:true={hasCreatedTaskForCurrentArea}
+                                    >
+                                        <div
+                                            style="
+                                                margin-top: 10px;
+                                                padding: 10px;
+                                                background-color: #f0f7ff;
+                                                border-radius: 5px;
+                                                border-left: 3px solid #28a745;
+                                            "
+                                        >
+                                            <p
+                                                style="
+                                                    margin: 0;
+                                                    color: #155724;
+                                                "
+                                            >
+                                                ✓ Task created successfully for
+                                                this assessment area.
+                                            </p>
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
 

@@ -196,6 +196,7 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
     @track isEditing = false; // New property to control edit mode
     @track isFindingModalOpen = false; // Property to control new finding modal visibility
     @track isTaskModalOpen = false; // Property to control new task modal visibility
+    @track isFindingCreated = false; // Property to track if a finding has been successfully created
 
     // Properties to store new finding form data
     @track findingName = '';
@@ -217,9 +218,23 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
     @track taskAssignedTo = '';
     @track taskUploadedFiles = []; // Property to store uploaded files for tasks
 
+    // Map to track findings created per assessment area
+    @track findingsCreatedMap = {};
+    @track tasksCreatedMap = {};
+
     // Computed property to check if not in editing mode
     get isNotEditing() {
         return !this.isEditing;
+    }
+
+    // Computed property to check if finding has been created for current area
+    get hasCreatedFindingForCurrentArea() {
+        return this.findingsCreatedMap[this.currentAreaId] === true;
+    }
+
+    // Computed property to check if task has been created for current area
+    get hasCreatedTaskForCurrentArea() {
+        return this.tasksCreatedMap[this.currentAreaId] === true;
     }
 
     // Task data
@@ -535,6 +550,47 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         }
     }
 
+    // New method to handle the combined Findings and Tasks button
+    showFindingsAndTasks(event) {
+        this.currentAreaId = event.currentTarget.dataset.areaId;
+
+        // Check if a finding already exists for this area
+        const hasFinding = this.findingsCreatedMap[this.currentAreaId] === true;
+
+        // If finding exists, show tasks section; otherwise show findings form
+        if (hasFinding) {
+            this.displayHeader = 'Findings & Tasks';
+            this.openReviewComments = false;
+            this.showCapaForm = false; // Don't show findings form anymore
+            this.openRightFile = false;
+            this.openEmail = false;
+            this.showTasksSection = true; // Show tasks section instead
+            this.isRightPanelOpen = true;
+
+            console.log(
+                'Finding exists, showing tasks section for area:',
+                this.currentAreaId
+            );
+        } else {
+            this.displayHeader = 'Findings & Tasks';
+            this.openReviewComments = false;
+            this.showCapaForm = true; // Show findings form first
+            this.openRightFile = false;
+            this.openEmail = false;
+            this.showTasksSection = false;
+            this.isRightPanelOpen = true;
+
+            console.log(
+                'No finding yet, showing findings form for area:',
+                this.currentAreaId
+            );
+        }
+
+        if (window.innerWidth <= 768) {
+            this.showModal = true;
+        }
+    }
+
     showTasks(event) {
         this.currentAreaId = event.currentTarget.dataset.areaId;
         this.displayHeader = 'Task Details';
@@ -613,6 +669,28 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
 
     handleCloseFindingModal() {
         this.isFindingModalOpen = false;
+
+        // If we manually close the modal (cancel button), we still want to check
+        // if there was already a finding created and make sure UI reflects that
+        if (this.findingsCreatedMap[this.currentAreaId]) {
+            // Force a reactive update by recreating the findingsCreatedMap
+            this.findingsCreatedMap = { ...this.findingsCreatedMap };
+
+            // Show the tasks section if a finding was already created for this area
+            this.showCapaForm = false;
+            this.showTasksSection = true;
+            this.isRightPanelOpen = true;
+
+            console.log('Modal closed - Finding exists, showing tasks section');
+        } else {
+            // If no finding was created, keep showing the findings form
+            this.showCapaForm = true;
+            this.showTasksSection = false;
+
+            console.log(
+                'Modal closed - No finding yet, keeping findings form visible'
+            );
+        }
     }
 
     // Handle input changes for Finding form
@@ -660,30 +738,55 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
             }
         });
 
-        if (missingFields.length > 0) {
-            console.error('Missing mandatory fields:', missingFields);
-        }
-
         if (allFieldsValid) {
-            console.log('Saving Finding:', {
-                findingName: this.findingName,
-                findingType: this.findingType,
-                findingDescription: this.findingDescription,
+            // Create a new finding object
+            const newFinding = {
+                id: 'finding' + Date.now(), // Generate a unique ID
+                name: this.findingName,
+                type: this.findingType,
+                description: this.findingDescription,
                 rootCause: this.rootCause,
                 repeatFinding: this.repeatFinding,
                 resolutionTimeFrame: this.resolutionTimeFrame,
                 assessmentArea: this.assessmentArea,
-                status: this.status,
-                uploadedFiles: this.uploadedFiles // Include uploaded files in the save data
-            });
+                status: this.status
+            };
+
+            console.log('Saving Finding:', newFinding);
+
+            // Close modal before updating state
+            this.isFindingModalOpen = false;
+
             // Add logic to save the finding to your data source (e.g., Apex)
-            // Show custom success toast
-            this.showCustomToast(
-                'Success',
-                'Finding created successfully!',
-                'success'
+
+            // Mark this assessment area as having a finding - force reactivity with Object.assign
+            this.findingsCreatedMap = Object.assign(
+                {},
+                this.findingsCreatedMap,
+                { [this.currentAreaId]: true }
             );
-            this.handleCloseFindingModal(); // Close modal after saving
+
+            // Update the display header to reflect the new state
+            this.displayHeader = 'Findings & Tasks';
+
+            // Switch from findings form to tasks section
+            const currentAreaId = this.currentAreaId;
+            this.showCapaForm = false;
+            this.showTasksSection = true; // Show tasks section after finding is created
+
+            // Use Promise to update UI in next microtask
+            Promise.resolve().then(() => {
+                this.currentAreaId = currentAreaId;
+
+                // Show success toast after UI has been updated
+                this.showCustomToast(
+                    'Success',
+                    'Finding created successfully! You can now create a task.',
+                    'success'
+                );
+            });
+
+            this.isFindingCreated = true; // Set flag to indicate a finding has been created
         } else {
             console.error('Please fill in all mandatory fields.');
             // Show custom error toast
@@ -821,16 +924,25 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         });
 
         if (allTaskFieldsValid) {
-            console.log('Saving Task:', {
-                taskSubject: this.taskSubject,
-                taskComments: this.taskComments,
-                taskDueDate: this.taskDueDate,
-                taskPriority: this.taskPriority,
-                taskStatus: this.taskStatus,
-                taskAssignedTo: this.taskAssignedTo,
-                taskUploadedFiles: this.taskUploadedFiles // Include uploaded files
-            });
-            // Add logic to save the task to your data source
+            // Create a new task object
+            const newTask = {
+                id: 'task' + Date.now(), // Generate a unique ID
+                subject: this.taskSubject,
+                comments: this.taskComments,
+                dueDate: this.taskDueDate,
+                priority: this.taskPriority,
+                status: this.taskStatus,
+                assignedTo: this.taskAssignedTo
+            };
+
+            // Add the new task to the assessmentTasks array
+            this.assessmentTasks = [...this.assessmentTasks, newTask];
+
+            console.log('Saving Task:', newTask);
+
+            // Mark this assessment area as having a task
+            this.tasksCreatedMap[this.currentAreaId] = true;
+
             this.showCustomToast(
                 'Success',
                 'Task created successfully!',

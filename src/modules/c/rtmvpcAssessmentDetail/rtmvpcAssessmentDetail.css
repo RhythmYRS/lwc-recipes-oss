@@ -6,46 +6,137 @@
     font-family: 'Roboto', sans-serif; /* Apply Roboto font to the component host */
 }
 
-/* Make the component fill the available space and apply font */
+/* Base scrolling structure */
+html,
+body {
+    height: 100%;
+    overflow: hidden; /* Disable page-level scroll */
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container - only element with scroll */
 .main-container {
+    height: 100vh;
+    overflow-y: auto; /* Enable main container scroll */
     width: 100%;
-    min-height: 100vh;
     max-width: 100%;
-    overflow-x: hidden;
-    font-family: 'Roboto', sans-serif; /* Apply Roboto font to main container */
-}
-
-/* Apply Roboto to common text elements within the container for higher specificity */
-.main-container p,
-.main-container span,
-.main-container div,
-.main-container h1,
-.main-container h2,
-.main-container h3,
-.main-container h4,
-.main-container h5,
-.main-container h6,
-.main-container li,
-.main-container button,
-.main-container input,
-.main-container textarea {
     font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Assessment container - no scrolling */
 .assessment-container {
     width: 100%;
-    min-height: 100vh;
-    max-width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: visible; /* Don't restrict content height */
 }
 
-.capa-scroll {
-    min-height: 100vh;
+/* Card container - no scrolling */
+.card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    align-items: flex-start; /* Align to top so panels can expand independently */
+    overflow: visible;
+    box-sizing: border-box;
 }
 
-.cad-timeline_progressline {
-    border: 1px solid black;
-    position: relative;
-    left: 10px;
+/* Main panel - no scrolling, grows naturally */
+.main-panel {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible; /* Don't restrict content height */
+}
+
+/* Timeline panel - no changes as requested */
+.timeline-panel {
+    flex: 0 0 25%;
+    width: auto;
+    min-width: 300px;
+    max-width: 250px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+}
+
+/* Right panel - no scrolling */
+.right-panel {
+    width: 350px;
+    max-width: 350px;
+    flex: 0 0 350px;
+    background-color: #ffffff;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+}
+
+/* Action buttons - static positioning */
+.action-buttons-container {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e5e7eb;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    position: static;
+    margin-top: auto;
+    z-index: 1;
+}
+
+/* Media queries for responsive layout */
+@media (max-width: 992px) {
+    .card {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        height: auto;
+        overflow: visible !important;
+    }
+
+    .timeline-panel,
+    .main-panel,
+    .right-panel {
+        width: 100%;
+        max-width: 100%;
+        flex: none;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .right-panel {
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .action-buttons-container {
+        position: static;
+        width: 100%;
+    }
 }
 
 /* Card base styles - make it responsive */
@@ -805,6 +896,9 @@
     background-color: #f8f9fa;
     align-items: stretch; /* Ensure both panels stretch to same height */
     height: auto; /* Allow natural height expansion */
+    position: relative; /* Ensure positioned elements work properly */
+    overflow: visible; /* Allow content to be visible */
+    box-sizing: border-box;
 }
 
 /* Timeline Panel (Left Column) */
@@ -864,7 +958,8 @@
     position: absolute;
     left: 56px; /* Adjusted to align with new tighter dot centers */
     top: 10px; /* Start line slightly below top to align with first item */
-    bottom: 0;
+    bottom: auto; /* Allow line to extend with content */
+    height: 100%; /* Ensure line extends full height */
     width: 0;
     border-left: 2px dashed #007bff;
     z-index: 0;
@@ -1271,6 +1366,7 @@
     box-sizing: border-box;
     overflow: visible;
     align-self: stretch; /* Stretch to match container height */
+    position: relative; /* Needed for proper positioning of child elements */
 }
 
 .panel-header {
@@ -1333,34 +1429,31 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 18px;
     padding: 20px;
-    flex: 1;
     box-sizing: border-box;
     overflow: visible;
 }
 
+/* Assessment area - ensure it's visible */
 .assessment-area {
-    background: #f4f7fb; /* soft blue-gray */
+    background: #f4f7fb;
     border: 1px solid #e0e6ed;
     border-radius: 10px;
-    margin: 0 0 18px 0; /* Remove auto margins, use full width */
+    margin: 0 0 10px 0;
     box-shadow: 0 2px 8px rgba(90, 62, 132, 0.06);
     transition:
         box-shadow 0.2s,
         border-color 0.2s,
         background 0.2s;
     padding: 0;
-    width: 100%; /* Use full width of container */
+    width: 100%;
     box-sizing: border-box;
     overflow: visible;
+    display: flex;
+    flex-direction: column;
 }
-.assessment-area:hover,
-.assessment-area:focus-within {
-    background: #eaf1fa;
-    border-color: #b3c6e0;
-    box-shadow: 0 4px 16px rgba(90, 62, 132, 0.12);
-}
+
 .area-header {
     display: flex;
     flex-direction: row; /* Ensure horizontal layout on large screens */
@@ -1375,11 +1468,11 @@
     transition:
         background 0.2s,
         color 0.2s;
-    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    flex-wrap: wrap; /* Allow wrapping when needed */
     justify-content: space-between; /* Space between title and metrics */
     box-sizing: border-box;
     overflow: visible;
-    min-height: 60px;
+    min-height: auto;
 }
 .area-header:hover,
 .area-header:focus {
@@ -1390,35 +1483,39 @@
     flex: 1 1 auto; /* Allow growing and shrinking, basis based on content */
     margin-right: 20px; /* Space between title and metrics */
     min-width: 200px; /* Increased min-width for better title visibility */
+    max-width: 100%; /* Ensure it doesn't overflow */
     font-size: 1.08rem;
     color: #3a3a4c;
     font-weight: 600;
     letter-spacing: 0.01em;
-    white-space: nowrap; /* Prevent title text wrapping initially */
+    white-space: normal; /* Allow text wrapping */
     overflow: hidden;
     text-overflow: ellipsis; /* Show ellipsis for truncated text */
     box-sizing: border-box;
+    padding-right: 10px; /* Add some padding to prevent text from touching the edge */
 }
 .area-metrics {
     display: flex;
     gap: 8px; /* Slightly reduced gap for better fit */
     margin-left: auto; /* Push metrics block to the right */
-    flex: 0 0 auto; /* Prevent growing and shrinking, size based on content */
+    flex: 0 1 auto; /* Don't grow, but allow shrinking if needed */
     align-items: center;
-    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    flex-wrap: wrap; /* Allow wrapping when needed */
     justify-content: flex-end; /* Align metric items to the right within their container */
-    min-width: 400px; /* Ensure sufficient space for all metrics */
+    min-width: 0; /* Remove minimum width to allow proper shrinking */
     box-sizing: border-box;
     overflow: visible;
 }
 .area-metric {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    min-width: 60px; /* Increased min-width for better visibility */
+    align-items: center;
+    min-width: 60px; /* Minimum width */
+    max-width: 90px; /* Maximum width */
     padding: 0 4px; /* Slightly reduced padding */
     box-sizing: border-box;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 1; /* Allow shrinking */
+    text-align: center; /* Center the text */
 }
 .metric-label {
     font-size: 0.85rem;
@@ -1435,23 +1532,26 @@
 .area-details {
     background: #e6edff; /* Very light off-white/blue tint */
     border-radius: 0 0 10px 10px;
-    padding: 1px 29px; /* Reduced vertical padding */
+    padding: 16px 20px; /* Consistent padding */
     border-top: 1px solid #e0e6ed;
     box-shadow: 0 2px 8px rgba(90, 62, 132, 0.04);
     display: flex; /* Use flexbox for layout within area-details */
     flex-direction: column; /* Stack children vertically */
-    gap: 5px; /* Reduced space between area-content and area-actions */
+    gap: 15px; /* Space between area-content and area-actions */
+    width: 100%; /* Full width */
+    box-sizing: border-box;
+    overflow: visible; /* Ensure content is visible */
 }
 
 .area-content {
     padding: 0; /* Remove padding here as it's in area-details */
     background-color: transparent; /* Remove background */
     border-radius: 0; /* Remove border radius */
-    margin-top: 0; /* Remove margin-top */
-    flex-shrink: 0; /* Prevent shrinking */
-    width: 100%;
-    /* Ensure area-content does not grow and take all space */
-    flex-grow: 0;
+    width: 100%; /* Full width */
+    box-sizing: border-box;
+    height: auto;
+    min-height: auto;
+    max-height: none;
 }
 
 .area-content p {
@@ -1540,18 +1640,12 @@
 .area-actions {
     display: flex;
     flex-direction: row;
-    gap: 16px;
-    padding: 0; /* Remove padding here */
-    background: none;
-    border: none;
+    gap: 10px;
     justify-content: flex-start;
-    align-items: center;
     flex-wrap: wrap;
-    margin-top: 0; /* Ensure no extra space is added */
-    flex-shrink: 0; /* Prevent shrinking */
-    width: 100%;
-    padding-top: 10px; /* Reduced space above actions */
-    /* Removed min-height */
+    padding-top: 5px;
+    border-top: 1px solid rgba(224, 230, 237, 0.6);
+    margin-top: 5px;
 }
 
 /* Adjust padding for area-details on smaller screens */
@@ -1675,11 +1769,16 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    flex-shrink: 0;
-    margin-top: 20px;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-top: auto; /* Push to bottom of container */
     box-sizing: border-box;
     overflow: visible;
     min-width: 0; /* Allow container to shrink if needed */
+    position: sticky; /* Keep buttons visible when scrolling */
+    bottom: 0; /* Stick to bottom */
+    z-index: 10; /* Ensure it stays above other content */
+    width: 100%; /* Full width */
+    background-color: #f8f9fa; /* Match card background */
 }
 
 /* Main Action Buttons Styling */
@@ -1783,6 +1882,7 @@
         gap: 15px;
         padding: 15px;
         min-height: auto;
+        overflow-y: visible; /* Allow container to expand */
     }
 
     .timeline-panel {
@@ -1791,6 +1891,7 @@
         min-width: 280px; /* Maintain minimum width on medium screens */
         flex: none;
         height: auto;
+        min-height: auto; /* Remove min-height to prevent extra space */
     }
 
     .timeline-container {
@@ -1801,8 +1902,18 @@
         width: 100%;
         flex: none;
         padding: 0;
-        min-height: auto;
+        min-height: auto; /* Remove min-height to prevent extra space */
         height: auto;
+        overflow: visible;
+    }
+
+    .right-panel {
+        width: 100%;
+        max-width: 100%;
+        flex: none;
+        min-height: auto;
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
     }
 
     .area-metrics {
@@ -1813,6 +1924,11 @@
 
     .area-actions {
         flex-wrap: wrap;
+    }
+
+    .action-buttons-container {
+        position: static; /* Remove sticky positioning on smaller screens */
+        width: 100%;
     }
 }
 
@@ -1835,6 +1951,10 @@
         height: auto;
     }
 
+    .right-panel {
+        order: 3;
+    }
+
     .timeline-container {
         margin: 0;
     }
@@ -1849,28 +1969,13 @@
         align-items: flex-start;
         padding: 10px 6px;
     }
-    .area-title {
-        margin-right: 0;
-        margin-bottom: 8px;
-        min-width: 120px;
-        width: 100%;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
+
+    .assessment-areas {
+        padding: 15px 10px;
     }
-    .area-metrics {
-        margin-left: 0;
-        width: 100%;
-        margin-top: 8px;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-    .area-metric {
-        min-width: unset;
-        flex-basis: calc(50% - 6px);
-        margin-bottom: 5px;
-        padding: 0;
+
+    .area-details {
+        padding: 14px 18px 12px 18px;
     }
 
     .action-buttons-container {
@@ -1882,20 +1987,6 @@
     .main-action-button {
         width: 100%;
         min-width: 120px;
-    }
-
-    .area-details {
-        padding: 14px 18px 12px 18px;
-    }
-    .area-content p {
-        margin-bottom: 12px;
-        font-size: 0.9rem;
-    }
-    .area-actions {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: flex-start;
     }
 }
 
@@ -2019,12 +2110,15 @@
 /* Right panel styles */
 .right-panel {
     width: 350px;
+    max-width: 350px; /* Add max-width */
+    flex: 0 0 350px; /* Fixed width, no grow, no shrink */
     background-color: #ffffff;
     border-left: 1px solid #e0e0e0;
     display: flex;
     flex-direction: column;
-    height: fit-content;
-    min-height: 500px;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
 }
 
 .right-panel .panel-header {
@@ -2980,4 +3074,57 @@
     .assessment-name {
         font-size: 0.9em;
     }
+}
+
+/* Override any nested scrolling containers */
+.main-panel *:not(.main-container) {
+    overflow: visible !important;
+}
+
+/* Fix for expanded assessment areas */
+.area-details {
+    overflow: visible !important;
+    height: auto !important;
+}
+
+/* Ensure area headers and content expand naturally */
+.area-header {
+    min-height: auto;
+    flex-wrap: wrap;
+    overflow: visible !important;
+}
+
+.area-content {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+}
+
+/* Important overrides to ensure main container is the only scrollable element */
+.timeline-scroll {
+    overflow: visible !important;
+    height: auto !important;
+}
+
+.panel-content {
+    overflow: visible !important;
+    height: auto !important;
+}
+
+.assessment-area .area-details {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Fix any scrolling that might be set on the right panel */
+.right-panel .panel-content {
+    flex: 1;
+    overflow: visible !important;
+    height: auto !important;
+}
+
+/* Make sure timeline panel doesn't scroll either */
+.timeline-container {
+    overflow: visible !important;
+    height: auto !important;
 }
