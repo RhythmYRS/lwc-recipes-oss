@@ -234,11 +234,38 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
 
     // Computed property to check if task has been created for current area
     get hasCreatedTaskForCurrentArea() {
-        return this.tasksCreatedMap[this.currentAreaId] === true;
+        return this.hasTasksForCurrentArea();
     }
 
+    // Finding data array
+    @track assessmentFindings = [
+        {
+            id: 'finding1',
+            name: 'Technical Debt Assessment',
+            description:
+                'Current technical debt includes legacy systems that need modernization.',
+            type: 'Major Non-Conformance',
+            rootCause: 'Process issue',
+            repeatFinding: 'No',
+            resolutionTimeFrame: '30 days',
+            assessmentArea: 'Technical Architecture',
+            status: 'Open'
+        },
+        {
+            id: 'finding2',
+            name: 'System Integration',
+            description: 'Integration between systems requires optimization.',
+            type: 'Minor Non-Conformance',
+            rootCause: 'Equipment failure',
+            repeatFinding: 'No',
+            resolutionTimeFrame: '15 days',
+            assessmentArea: 'Security Assessment',
+            status: 'In Progress'
+        }
+    ];
+
     // Task data
-    assessmentTasks = [
+    @track assessmentTasks = [
         {
             id: 'task1',
             subject: 'Tech Debt',
@@ -333,12 +360,26 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
 
     handleLeftButtonClick() {
         this.isTimelinePanelVisible = !this.isTimelinePanelVisible;
-        console.log('Timeline panel visibility toggled');
+        // If timeline panel is being opened and right panel is open, close right panel
+        if (this.isTimelinePanelVisible && this.isRightPanelOpen) {
+            this.isRightPanelOpen = false;
+        }
+        console.log(
+            'Timeline panel visibility toggled, isTimelinePanelVisible:',
+            this.isTimelinePanelVisible
+        );
     }
 
     handleRightButtonClick() {
         this.isRightPanelOpen = !this.isRightPanelOpen;
-        console.log('Right panel visibility toggled');
+        // If right panel is being opened and timeline panel is visible, close timeline panel
+        if (this.isRightPanelOpen && this.isTimelinePanelVisible) {
+            this.isTimelinePanelVisible = false;
+        }
+        console.log(
+            'Right panel visibility toggled, isRightPanelOpen:',
+            this.isRightPanelOpen
+        );
     }
 
     // Method to toggle the filter menu
@@ -530,6 +571,11 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         this.showTasksSection = false;
         this.isRightPanelOpen = true;
 
+        // Close timeline panel when right panel opens
+        if (this.isTimelinePanelVisible) {
+            this.isTimelinePanelVisible = false;
+        }
+
         if (window.innerWidth <= 768) {
             this.showModal = true;
         }
@@ -545,46 +591,44 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         this.showTasksSection = false;
         this.isRightPanelOpen = true;
 
+        // Close timeline panel when right panel opens
+        if (this.isTimelinePanelVisible) {
+            this.isTimelinePanelVisible = false;
+        }
+
         if (window.innerWidth <= 768) {
             this.showModal = true;
         }
     }
 
-    // New method to handle the combined Findings and Tasks button
+    // Method to handle the combined Findings and Tasks button
     showFindingsAndTasks(event) {
+        // Get the assessment area ID from the clicked button
         this.currentAreaId = event.currentTarget.dataset.areaId;
 
-        // Check if a finding already exists for this area
-        const hasFinding = this.findingsCreatedMap[this.currentAreaId] === true;
+        // Always display the findings form, tasks will be shown below when created
+        this.displayHeader = 'Findings & Tasks';
+        this.openReviewComments = false;
+        this.showCapaForm = true; // Always show findings form
+        this.openRightFile = false;
+        this.openEmail = false;
+        this.showTasksSection = false; // Tasks are shown within the findings form if they exist
+        this.isRightPanelOpen = true;
 
-        // If finding exists, show tasks section; otherwise show findings form
-        if (hasFinding) {
-            this.displayHeader = 'Findings & Tasks';
-            this.openReviewComments = false;
-            this.showCapaForm = false; // Don't show findings form anymore
-            this.openRightFile = false;
-            this.openEmail = false;
-            this.showTasksSection = true; // Show tasks section instead
-            this.isRightPanelOpen = true;
+        // Check if a finding already exists for this SPECIFIC area
+        const hasFinding = this.hasFindingsForCurrentArea();
 
-            console.log(
-                'Finding exists, showing tasks section for area:',
-                this.currentAreaId
-            );
-        } else {
-            this.displayHeader = 'Findings & Tasks';
-            this.openReviewComments = false;
-            this.showCapaForm = true; // Show findings form first
-            this.openRightFile = false;
-            this.openEmail = false;
-            this.showTasksSection = false;
-            this.isRightPanelOpen = true;
+        // Set isFindingCreated based on current area's findings
+        this.isFindingCreated = hasFinding;
 
-            console.log(
-                'No finding yet, showing findings form for area:',
-                this.currentAreaId
-            );
+        // Close timeline panel when right panel opens
+        if (this.isTimelinePanelVisible) {
+            this.isTimelinePanelVisible = false;
         }
+
+        console.log(
+            `Showing findings panel for area: ${this.currentAreaId}, finding exists: ${hasFinding}, count: ${this.findingsForCurrentArea.length}`
+        );
 
         if (window.innerWidth <= 768) {
             this.showModal = true;
@@ -601,6 +645,11 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         this.showTasksSection = true;
         this.isRightPanelOpen = true;
 
+        // Close timeline panel when right panel opens
+        if (this.isTimelinePanelVisible) {
+            this.isTimelinePanelVisible = false;
+        }
+
         if (window.innerWidth <= 768) {
             this.showModal = true;
         }
@@ -615,6 +664,11 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         this.openEmail = true;
         this.showTasksSection = false;
         this.isRightPanelOpen = true;
+
+        // Close timeline panel when right panel opens
+        if (this.isTimelinePanelVisible) {
+            this.isTimelinePanelVisible = false;
+        }
 
         if (window.innerWidth <= 768) {
             this.showModal = true;
@@ -701,6 +755,36 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         console.log(`Field ${field} updated to: ${value}`);
     }
 
+    // Helper method to get findings for current area
+    get findingsForCurrentArea() {
+        return this.assessmentFindings.filter(
+            (finding) => finding.areaId === this.currentAreaId
+        );
+    }
+
+    // Helper method to get tasks for current area
+    get tasksForCurrentArea() {
+        return this.assessmentTasks.filter(
+            (task) => task.areaId === this.currentAreaId
+        );
+    }
+
+    // Helper method to check if the current area has any findings
+    hasFindingsForCurrentArea() {
+        const findings = this.assessmentFindings.filter(
+            (finding) => finding.areaId === this.currentAreaId
+        );
+        return findings && findings.length > 0;
+    }
+
+    // Helper method to check if the current area has any tasks
+    hasTasksForCurrentArea() {
+        const tasks = this.assessmentTasks.filter(
+            (task) => task.areaId === this.currentAreaId
+        );
+        return tasks && tasks.length > 0;
+    }
+
     handleSaveFinding() {
         console.log('Save Finding clicked - Current field values:', {
             findingName: this.findingName,
@@ -749,7 +833,8 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
                 repeatFinding: this.repeatFinding,
                 resolutionTimeFrame: this.resolutionTimeFrame,
                 assessmentArea: this.assessmentArea,
-                status: this.status
+                status: this.status,
+                areaId: this.currentAreaId // Store the assessment area ID with the finding
             };
 
             console.log('Saving Finding:', newFinding);
@@ -757,7 +842,8 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
             // Close modal before updating state
             this.isFindingModalOpen = false;
 
-            // Add logic to save the finding to your data source (e.g., Apex)
+            // Add the finding to the assessmentFindings array
+            this.assessmentFindings = [...this.assessmentFindings, newFinding];
 
             // Mark this assessment area as having a finding - force reactivity with Object.assign
             this.findingsCreatedMap = Object.assign(
@@ -769,10 +855,10 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
             // Update the display header to reflect the new state
             this.displayHeader = 'Findings & Tasks';
 
-            // Switch from findings form to tasks section
+            // Show the findings panel with create task button
             const currentAreaId = this.currentAreaId;
-            this.showCapaForm = false;
-            this.showTasksSection = true; // Show tasks section after finding is created
+            this.showCapaForm = true; // Keep showing findings section
+            this.showTasksSection = false; // Don't show tasks section yet
 
             // Use Promise to update UI in next microtask
             Promise.resolve().then(() => {
@@ -880,6 +966,18 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
             'Create New Task button clicked for area:',
             this.currentAreaId
         );
+
+        // First check if there's a finding for this area
+        if (!this.hasFindingsForCurrentArea()) {
+            // If no finding exists, show error message and prompt to create a finding first
+            this.showCustomToast(
+                'Error',
+                'You must create a finding for this area before creating a task.',
+                'error'
+            );
+            return;
+        }
+
         this.resetTaskForm(); // Clear previous data
         this.isTaskModalOpen = true;
     }
@@ -932,7 +1030,8 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
                 dueDate: this.taskDueDate,
                 priority: this.taskPriority,
                 status: this.taskStatus,
-                assignedTo: this.taskAssignedTo
+                assignedTo: this.taskAssignedTo,
+                areaId: this.currentAreaId // Store the assessment area ID with the task
             };
 
             // Add the new task to the assessmentTasks array
@@ -941,14 +1040,22 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
             console.log('Saving Task:', newTask);
 
             // Mark this assessment area as having a task
-            this.tasksCreatedMap[this.currentAreaId] = true;
+            this.tasksCreatedMap = Object.assign({}, this.tasksCreatedMap, {
+                [this.currentAreaId]: true
+            });
 
+            // Keep the right panel open, showing both findings and tasks
+            this.showCapaForm = true; // Keep showing findings section
+            this.showTasksSection = false; // We're already showing tasks within the findings section
+            this.isRightPanelOpen = true;
+
+            // Close the modal and show toast
+            this.handleCloseTaskModal(); // Close modal after saving
             this.showCustomToast(
                 'Success',
                 'Task created successfully!',
                 'success'
             );
-            this.handleCloseTaskModal(); // Close modal after saving
         } else {
             console.error('Please fill in all mandatory task fields.');
             this.showCustomToast(

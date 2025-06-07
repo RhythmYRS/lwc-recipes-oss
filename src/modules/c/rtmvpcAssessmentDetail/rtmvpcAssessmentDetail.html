@@ -13,6 +13,9 @@
                     <!-- Timeline Panel -->
                     <div class={timelinePanelClass}>
                         <div class="panel-header timeline-header">
+                            <span class="timeline-title"
+                                ><b>{labels.timeLine}</b></span
+                            >
                             <template if:true={isTimelinePanelVisible}>
                                 <button
                                     class="icon-button"
@@ -36,7 +39,6 @@
                                     </svg>
                                 </button>
                             </template>
-                            <span><b>{labels.timeLine}</b></span>
                         </div>
                         <div class="timeline-container">
                             <div class="timeline-scroll">
@@ -775,47 +777,131 @@
 
                                 <template if:true={showCapaForm}>
                                     <div class="findings-section">
-                                        <div class="finding">
-                                            <h4>
-                                                Finding #1: Technical Debt
-                                                Assessment
-                                            </h4>
-                                            <p>
-                                                Current technical debt includes
-                                                legacy systems that need
-                                                modernization.
-                                            </p>
-                                            <div class="finding-meta">
-                                                <span>Priority: High</span>
-                                                <span>Status: Open</span>
-                                            </div>
-                                        </div>
-                                        <div class="finding">
-                                            <h4>
-                                                Finding #2: System Integration
-                                            </h4>
-                                            <p>
-                                                Integration between systems
-                                                requires optimization.
-                                            </p>
-                                            <div class="finding-meta">
-                                                <span>Priority: Medium</span>
-                                                <span>Status: In Progress</span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            class="create-button"
-                                            onclick={handleCreateFinding}
-                                        >
-                                            Create New Finding
-                                        </button>
+                                        <!-- Display findings from assessmentFindings array -->
+                                        <template if:false={isFindingCreated}>
+                                            <!-- Display sample findings before a finding is created for this area -->
+                                            <template
+                                                for:each={assessmentFindings}
+                                                for:item="finding"
+                                            >
+                                                <div
+                                                    key={finding.id}
+                                                    class="finding"
+                                                >
+                                                    <h4>{finding.name}</h4>
+                                                    <p>{finding.description}</p>
+                                                    <div class="finding-meta">
+                                                        <span
+                                                            >Type:
+                                                            {finding.type}</span
+                                                        >
+                                                        <span
+                                                            >Status:
+                                                            {finding.status}</span
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+
+                                        <!-- Display findings for this specific area after creation -->
+                                        <template if:true={isFindingCreated}>
+                                            <template
+                                                for:each={findingsForCurrentArea}
+                                                for:item="finding"
+                                            >
+                                                <div
+                                                    key={finding.id}
+                                                    class="finding"
+                                                >
+                                                    <h4>{finding.name}</h4>
+                                                    <p>{finding.description}</p>
+                                                    <div class="finding-meta">
+                                                        <span
+                                                            >Type:
+                                                            {finding.type}</span
+                                                        >
+                                                        <span
+                                                            >Status:
+                                                            {finding.status}</span
+                                                        >
+                                                        <span
+                                                            >Timeframe:
+                                                            {finding.resolutionTimeFrame}</span
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+
+                                        <!-- Show "Create New Finding" button if no finding has been created yet -->
+                                        <template if:false={isFindingCreated}>
+                                            <button
+                                                class="create-button"
+                                                onclick={handleCreateFinding}
+                                            >
+                                                Create New Finding
+                                            </button>
+                                        </template>
+
+                                        <!-- Show "Create Task" button if a finding has been created -->
+                                        <template if:true={isFindingCreated}>
+                                            <button
+                                                class="create-button"
+                                                onclick={handleCreateTask}
+                                            >
+                                                Create New Task
+                                            </button>
+
+                                            <!-- Show tasks section when tasks are created -->
+                                            <template
+                                                if:true={hasTasksForCurrentArea}
+                                            >
+                                                <div
+                                                    class="tasks-section findings-tasks-section"
+                                                >
+                                                    <h3>Associated Tasks</h3>
+                                                    <template
+                                                        for:each={tasksForCurrentArea}
+                                                        for:item="task"
+                                                    >
+                                                        <div
+                                                            key={task.id}
+                                                            class="task-item"
+                                                        >
+                                                            <div
+                                                                class="task-subject"
+                                                            >
+                                                                <b
+                                                                    >Task
+                                                                    Subject:</b
+                                                                >
+                                                                {task.subject}
+                                                            </div>
+                                                            <div
+                                                                class="task-comments"
+                                                            >
+                                                                <b>Comments:</b>
+                                                                {task.comments}
+                                                            </div>
+                                                            <div
+                                                                class="task-dueDate"
+                                                            >
+                                                                <b>Due Date:</b>
+                                                                {task.dueDate}
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </template>
                                     </div>
                                 </template>
 
                                 <template if:true={showTasksSection}>
                                     <div class="tasks-section">
                                         <template
-                                            for:each={assessmentTasks}
+                                            for:each={tasksForCurrentArea}
                                             for:item="task"
                                         >
                                             <div
@@ -836,12 +922,44 @@
                                                 </div>
                                             </div>
                                         </template>
-                                        <button
-                                            class="create-button"
-                                            onclick={handleCreateTask}
+
+                                        <!-- Only show Create Task button if no task exists for this area -->
+                                        <template
+                                            if:false={hasTasksForCurrentArea}
                                         >
-                                            Create New Task
-                                        </button>
+                                            <button
+                                                class="create-button"
+                                                onclick={handleCreateTask}
+                                            >
+                                                Create New Task
+                                            </button>
+                                        </template>
+
+                                        <!-- Show confirmation if task is created -->
+                                        <template
+                                            if:true={hasTasksForCurrentArea}
+                                        >
+                                            <div
+                                                style="
+                                                    margin-top: 10px;
+                                                    padding: 10px;
+                                                    background-color: #f0f7ff;
+                                                    border-radius: 5px;
+                                                    border-left: 3px solid
+                                                        #28a745;
+                                                "
+                                            >
+                                                <p
+                                                    style="
+                                                        margin: 0;
+                                                        color: #155724;
+                                                    "
+                                                >
+                                                    ✓ Task created successfully
+                                                    for this assessment area.
+                                                </p>
+                                            </div>
+                                        </template>
                                     </div>
                                 </template>
 
@@ -983,37 +1101,65 @@
 
                             <template if:true={showCapaForm}>
                                 <div class="findings-section">
-                                    <div class="finding">
-                                        <h4>
-                                            Finding #1: Technical Debt
-                                            Assessment
-                                        </h4>
-                                        <p>
-                                            Current technical debt includes
-                                            legacy systems that need
-                                            modernization.
-                                        </p>
-                                        <div class="finding-meta">
-                                            <span>Priority: High</span>
-                                            <span>Status: Open</span>
-                                        </div>
-                                    </div>
-                                    <div class="finding">
-                                        <h4>Finding #2: System Integration</h4>
-                                        <p>
-                                            Integration between systems requires
-                                            optimization.
-                                        </p>
-                                        <div class="finding-meta">
-                                            <span>Priority: Medium</span>
-                                            <span>Status: In Progress</span>
-                                        </div>
-                                    </div>
+                                    <!-- Display findings from assessmentFindings array -->
+                                    <template if:false={isFindingCreated}>
+                                        <!-- Display sample findings before a finding is created for this area -->
+                                        <template
+                                            for:each={assessmentFindings}
+                                            for:item="finding"
+                                        >
+                                            <div
+                                                key={finding.id}
+                                                class="finding"
+                                            >
+                                                <h4>{finding.name}</h4>
+                                                <p>{finding.description}</p>
+                                                <div class="finding-meta">
+                                                    <span
+                                                        >Type:
+                                                        {finding.type}</span
+                                                    >
+                                                    <span
+                                                        >Status:
+                                                        {finding.status}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+
+                                    <!-- Display findings for this specific area after creation -->
+                                    <template if:true={isFindingCreated}>
+                                        <template
+                                            for:each={findingsForCurrentArea}
+                                            for:item="finding"
+                                        >
+                                            <div
+                                                key={finding.id}
+                                                class="finding"
+                                            >
+                                                <h4>{finding.name}</h4>
+                                                <p>{finding.description}</p>
+                                                <div class="finding-meta">
+                                                    <span
+                                                        >Type:
+                                                        {finding.type}</span
+                                                    >
+                                                    <span
+                                                        >Status:
+                                                        {finding.status}</span
+                                                    >
+                                                    <span
+                                                        >Timeframe:
+                                                        {finding.resolutionTimeFrame}</span
+                                                    >
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
 
                                     <!-- Only show Create Finding button if no finding exists for this area -->
-                                    <template
-                                        if:false={hasCreatedFindingForCurrentArea}
-                                    >
+                                    <template if:false={isFindingCreated}>
                                         <button
                                             class="create-button"
                                             onclick={handleCreateFinding}
@@ -1022,96 +1168,58 @@
                                         </button>
                                     </template>
 
-                                    <!-- Show Tasks section conditionally only after finding is created -->
-                                    <template
-                                        if:true={hasCreatedFindingForCurrentArea}
-                                    >
-                                        <div
-                                            style="
-                                                margin-top: 10px;
-                                                padding: 10px;
-                                                background-color: #f0f7ff;
-                                                border-radius: 5px;
-                                                border-left: 3px solid #28a745;
-                                            "
+                                    <!-- Show "Create Task" button if a finding has been created -->
+                                    <template if:true={isFindingCreated}>
+                                        <!-- Only show Create Task button if no task exists for this area -->
+                                        <template
+                                            if:false={hasTasksForCurrentArea}
                                         >
-                                            <p
-                                                style="
-                                                    margin: 0;
-                                                    color: #155724;
-                                                "
+                                            <button
+                                                class="create-button create-task-btn"
+                                                onclick={handleCreateTask}
                                             >
-                                                ✓ Finding created successfully
-                                                for this assessment area.
-                                            </p>
-                                        </div>
+                                                Create New Task
+                                            </button>
+                                        </template>
 
-                                        <div
-                                            class="tasks-section"
-                                            style="margin-top: 20px"
+                                        <!-- Show tasks section when tasks are created -->
+                                        <template
+                                            if:true={hasTasksForCurrentArea}
                                         >
-                                            <template
-                                                for:each={assessmentTasks}
-                                                for:item="task"
+                                            <div
+                                                class="tasks-section findings-tasks-section"
                                             >
-                                                <div
-                                                    key={task.id}
-                                                    class="task-item"
+                                                <h3>Associated Tasks</h3>
+                                                <template
+                                                    for:each={tasksForCurrentArea}
+                                                    for:item="task"
                                                 >
-                                                    <div class="task-subject">
-                                                        <b>Task Subject:</b>
-                                                        {task.subject}
-                                                    </div>
-                                                    <div class="task-comments">
-                                                        <b>Comments:</b>
-                                                        {task.comments}
-                                                    </div>
-                                                    <div class="task-dueDate">
-                                                        <b>Due Date:</b>
-                                                        {task.dueDate}
-                                                    </div>
-                                                </div>
-                                            </template>
-
-                                            <!-- Only show Create Task button if no task exists for this area -->
-                                            <template
-                                                if:false={hasCreatedTaskForCurrentArea}
-                                            >
-                                                <button
-                                                    class="create-button"
-                                                    onclick={handleCreateTask}
-                                                >
-                                                    Create New Task
-                                                </button>
-                                            </template>
-
-                                            <!-- Show confirmation if task is created -->
-                                            <template
-                                                if:true={hasCreatedTaskForCurrentArea}
-                                            >
-                                                <div
-                                                    style="
-                                                        margin-top: 10px;
-                                                        padding: 10px;
-                                                        background-color: #f0f7ff;
-                                                        border-radius: 5px;
-                                                        border-left: 3px solid
-                                                            #28a745;
-                                                    "
-                                                >
-                                                    <p
-                                                        style="
-                                                            margin: 0;
-                                                            color: #155724;
-                                                        "
+                                                    <div
+                                                        key={task.id}
+                                                        class="task-item"
                                                     >
-                                                        ✓ Task created
-                                                        successfully for this
-                                                        assessment area.
-                                                    </p>
-                                                </div>
-                                            </template>
-                                        </div>
+                                                        <div
+                                                            class="task-subject"
+                                                        >
+                                                            <b>Task Subject:</b>
+                                                            {task.subject}
+                                                        </div>
+                                                        <div
+                                                            class="task-comments"
+                                                        >
+                                                            <b>Comments:</b>
+                                                            {task.comments}
+                                                        </div>
+                                                        <div
+                                                            class="task-dueDate"
+                                                        >
+                                                            <b>Due Date:</b>
+                                                            {task.dueDate}
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
                                     </template>
                                 </div>
                             </template>
@@ -1119,7 +1227,7 @@
                             <template if:true={showTasksSection}>
                                 <div class="tasks-section">
                                     <template
-                                        for:each={assessmentTasks}
+                                        for:each={tasksForCurrentArea}
                                         for:item="task"
                                     >
                                         <div key={task.id} class="task-item">
@@ -1137,9 +1245,7 @@
                                     </template>
 
                                     <!-- Only show Create Task button if no task exists for this area -->
-                                    <template
-                                        if:false={hasCreatedTaskForCurrentArea}
-                                    >
+                                    <template if:false={hasTasksForCurrentArea}>
                                         <button
                                             class="create-button"
                                             onclick={handleCreateTask}
@@ -1149,9 +1255,7 @@
                                     </template>
 
                                     <!-- Show confirmation if task is created -->
-                                    <template
-                                        if:true={hasCreatedTaskForCurrentArea}
-                                    >
+                                    <template if:true={hasTasksForCurrentArea}>
                                         <div
                                             style="
                                                 margin-top: 10px;
