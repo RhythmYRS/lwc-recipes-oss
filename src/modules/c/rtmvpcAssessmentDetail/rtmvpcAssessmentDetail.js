@@ -222,6 +222,27 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
     @track findingsCreatedMap = {};
     @track tasksCreatedMap = {};
 
+    // Track comments for the chat-like interface
+    @track chatMessages = [
+        {
+            id: 'msg1',
+            sender: 'System Admin',
+            content: 'Assessment started. Please review all sections.',
+            timestamp: 'May-28-2025',
+            position: 'left' // System Admin messages always on left
+        },
+        {
+            id: 'msg2',
+            sender: 'User',
+            content:
+                'This assessment needs additional details on technical debt requirements.',
+            timestamp: 'May-29-2025',
+            position: 'right' // User messages always on right
+        }
+    ];
+
+    @track newChatMessage = '';
+
     // Computed property to check if not in editing mode
     get isNotEditing() {
         return !this.isEditing;
@@ -424,6 +445,10 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
         this.template.addEventListener('click', (event) => {
             const filterButton = this.template.querySelector('.filter-button');
             const filterMenu = this.template.querySelector('.filter-menu');
+            const exportButton = this.template.querySelector('.export-button');
+            const exportMenu = this.template.querySelector(
+                '.' + this.exportMenuClass.split(' ')[0]
+            );
 
             // If clicked outside filter menu and button, close the menu
             if (filterButton && filterMenu && this.showFilterMenu) {
@@ -432,6 +457,16 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
                     !filterMenu.contains(event.target)
                 ) {
                     this.showFilterMenu = false;
+                }
+            }
+
+            // If clicked outside export menu and button, close the menu
+            if (exportButton && exportMenu && this.showExportMenu) {
+                if (
+                    !exportButton.contains(event.target) &&
+                    !exportMenu.contains(event.target)
+                ) {
+                    this.showExportMenu = false;
                 }
             }
         });
@@ -563,7 +598,7 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
     // Right panel content handlers
     showComments(event) {
         this.currentAreaId = event.currentTarget.dataset.areaId;
-        this.displayHeader = 'Comments';
+        this.displayHeader = 'Follow-Ups';
         this.openReviewComments = true;
         this.showCapaForm = false;
         this.openRightFile = false;
@@ -1139,5 +1174,97 @@ export default class RtmvpcAssessmentDetail extends LightningElement {
 
         // Update the expand/collapse all button state
         this.showExpand = !this.isEditing;
+    }
+
+    // Handle input change for chat message
+    handleChatInputChange(event) {
+        this.newChatMessage = event.target.value;
+    }
+
+    // Send new chat message
+    handleSendChatMessage() {
+        if (!this.newChatMessage.trim()) return;
+
+        // Create a new message
+        const position = this.getNextMessagePosition();
+        const sender = position === 'left' ? 'System Admin' : 'User';
+
+        const newMessage = {
+            id: 'msg' + Date.now(),
+            sender: sender, // Set sender based on position
+            content: this.newChatMessage,
+            timestamp: new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }),
+            position: position // Alternating positions
+        };
+
+        // Add to chat messages
+        this.chatMessages = [...this.chatMessages, newMessage];
+
+        // Clear input
+        this.newChatMessage = '';
+
+        // Show success toast
+        // this.showCustomToast('Success', 'Message sent', 'success');
+    }
+
+    // Helper method to determine next message position
+    getNextMessagePosition() {
+        const length = this.chatMessages.length;
+        if (length % 2 === 0) {
+            return 'left';
+        }
+        return 'right';
+    }
+
+    // Handle Enter key press in chat input
+    handleChatKeyPress(event) {
+        if (event.key === 'Enter') {
+            this.handleSendChatMessage();
+        }
+    }
+
+    // Compute full class for chat message based on position
+    getChatMessageClass(message) {
+        if (message.position === 'left') {
+            return 'chat-message chat-message-left';
+        }
+        return 'chat-message chat-message-right';
+    }
+
+    // Computed property for the chat messages with proper classes
+    get chatMessagesWithClasses() {
+        return this.chatMessages.map((message) => {
+            return {
+                ...message,
+                cssClass: this.getChatMessageClass(message)
+            };
+        });
+    }
+
+    // Tab-related getters
+    get responsesTabClass() {
+        if (this.activeTab === 'responses') {
+            return 'tab active';
+        }
+        return 'tab';
+    }
+
+    get reportsTabClass() {
+        if (this.activeTab === 'reports') {
+            return 'tab active';
+        }
+        return 'tab';
+    }
+
+    get isResponsesTabActive() {
+        return this.activeTab === 'responses';
+    }
+
+    get isReportsTabActive() {
+        return this.activeTab === 'reports';
     }
 }
